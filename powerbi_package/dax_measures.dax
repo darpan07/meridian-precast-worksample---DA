@@ -1,0 +1,205 @@
+
+// ═══════════════════════════════════════════════════════════════
+// MERIDIAN PRECAST — POWER BI DAX MEASURES
+// ═══════════════════════════════════════════════════════════════
+// Copy each measure into Power BI Desktop → Modeling → New Measure
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─────────────────────────────────────────────────────────────
+// CORE METRICS
+// ─────────────────────────────────────────────────────────────
+
+Total Records = COUNTROWS(fact_labour_records)
+
+Total Hours = SUM(fact_labour_records[hours_worked])
+
+Total Labour Cost =
+    SUMX(
+        fact_labour_records,
+        fact_labour_records[hours_worked] * RELATED(dim_work_centres[labour_rate])
+    )
+
+Total Units Completed = SUM(fact_labour_records[units_completed])
+
+Total Units Scrapped = SUM(fact_labour_records[units_scrapped])
+
+Scrap Rate =
+    DIVIDE(
+        [Total Units Scrapped],
+        [Total Units Completed] + [Total Units Scrapped],
+        0
+    )
+
+Avg Hours Per Record = AVERAGE(fact_labour_records[hours_worked])
+
+
+// ─────────────────────────────────────────────────────────────
+// DATA QUALITY METRICS
+// ─────────────────────────────────────────────────────────────
+
+Missing Operator Count =
+    COUNTROWS(
+        FILTER(fact_labour_records, ISBLANK(fact_labour_records[operator_id]))
+    )
+
+Duplicate Record Count =
+    VAR DupGroups =
+        SUMMARIZE(
+            fact_labour_records,
+            fact_labour_records[date],
+            fact_labour_records[job_number],
+            fact_labour_records[stage],
+            fact_labour_records[operator_id],
+            fact_labour_records[hours_worked],
+            fact_labour_records[units_completed],
+            fact_labour_records[units_scrapped],
+            "GroupCount", COUNTROWS(fact_labour_records)
+        )
+    RETURN
+        COUNTROWS(FILTER(DupGroups, [GroupCount] > 1))
+
+Overtime Violations =
+    VAR DailyTotals =
+        ADDCOLUMNS(
+            SUMMARIZE(
+                FILTER(fact_labour_records, NOT(ISBLANK(fact_labour_records[operator_id]))),
+                fact_labour_records[operator_id],
+                fact_labour_records[date]
+            ),
+            "DailyHours", CALCULATE(SUM(fact_labour_records[hours_worked]))
+        )
+    RETURN
+        COUNTROWS(FILTER(DailyTotals, [DailyHours] > 8))
+
+Missing Scrap Reason Count =
+    COUNTROWS(
+        FILTER(
+            fact_labour_records,
+            fact_labour_records[units_scrapped] > 0
+            && ISBLANK(fact_labour_records[scrap_reason])
+        )
+    )
+
+Post Close Labour Count =
+    COUNTROWS(
+        FILTER(
+            fact_labour_records,
+            NOT(ISBLANK(fact_labour_records[date_closed]))
+            && fact_labour_records[date] > fact_labour_records[date_closed]
+        )
+    )
+
+Total Rule Violations =
+    [Missing Operator Count] +
+    [Duplicate Record Count] +
+    [Overtime Violations] +
+    [Missing Scrap Reason Count] +
+    [Post Close Labour Count]
+
+
+// ─────────────────────────────────────────────────────────────
+// PRODUCT PROFITABILITY
+// ─────────────────────────────────────────────────────────────
+
+Product Margin =
+    SUMX(
+        dim_products,
+        dim_products[sell_price_per_unit] - dim_products[cost_per_unit]
+    )
+
+Product Margin % =
+    DIVIDE(
+        SELECTEDVALUE(dim_products[sell_price_per_unit]) -
+            SELECTEDVALUE(dim_products[cost_per_unit]),
+        SELECTEDVALUE(dim_products[sell_price_per_unit]),
+        0
+    )
+
+Loss Making Products =
+    COUNTROWS(
+        FILTER(
+            dim_products,
+            dim_products[sell_price_per_unit] <= dim_products[cost_per_unit]
+        )
+    )
+
+Profitable Products =
+    COUNTROWS(
+        FILTER(
+            dim_products,
+            dim_products[sell_price_per_unit] > dim_products[cost_per_unit]
+        )
+    )
+
+
+// ─────────────────────────────────────────────────────────────
+// WORK CENTRE ANALYSIS
+// ─────────────────────────────────────────────────────────────
+
+Labour Cost By WC =
+    SUMX(
+        fact_labour_records,
+        fact_labour_records[hours_worked] * RELATED(dim_work_centres[labour_rate])
+    )
+
+Hours % of Total =
+    DIVIDE(
+        [Total Hours],
+        CALCULATE([Total Hours], ALL(dim_work_centres)),
+        0
+    )
+
+Cost Per Unit =
+    DIVIDE(
+        [Total Labour Cost],
+        [Total Units Completed],
+        0
+    )
+
+
+// ─────────────────────────────────────────────────────────────
+// JOB COMPARISON (Q9)
+// ─────────────────────────────────────────────────────────────
+
+JOB-1006 Hours =
+    CALCULATE(
+        SUM(fact_labour_records[hours_worked]),
+        fact_labour_records[job_number] = "JOB-1006"
+    )
+
+JOB-1010 Hours =
+    CALCULATE(
+        SUM(fact_labour_records[hours_worked]),
+        fact_labour_records[job_number] = "JOB-1010"
+    )
+
+Hour Difference = [JOB-1010 Hours] - [JOB-1006 Hours]
+
+Hour Difference % =
+    DIVIDE(
+        [JOB-1010 Hours] - [JOB-1006 Hours],
+        [JOB-1006 Hours],
+        0
+    )
+
+
+// ─────────────────────────────────────────────────────────────
+// CONDITIONAL FORMATTING HELPERS
+// ─────────────────────────────────────────────────────────────
+
+Status Color =
+    SWITCH(
+        TRUE(),
+        [Scrap Rate] > 0.10, "#D64045",   // Red
+        [Scrap Rate] > 0.05, "#E66C37",   // Orange
+        "#107C10"                           // Green
+    )
+
+Margin Status =
+    IF(
+        SELECTEDVALUE(dim_products[sell_price_per_unit]) >
+            SELECTEDVALUE(dim_products[cost_per_unit]),
+        "Profitable",
+        "Loss"
+    )

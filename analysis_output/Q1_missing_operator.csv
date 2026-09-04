@@ -1,0 +1,3 @@
+Record ID,Date,Job Number,Product Code,Stage,Work Centre,Operator ID,Operator Name,Hours Worked,Units Completed,Units Scrapped,Scrap Reason,Notes
+148,2026-06-12,JOB-1007,PRD-310,Curing,WC-300,,,4.5,10,0,,
+175,2026-06-18,JOB-1009,PRD-450,Curing,WC-300,,,4.5,10,0,,

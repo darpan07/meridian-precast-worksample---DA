@@ -1,0 +1,3 @@
+Record ID,Date,Job Number,Product Code,Stage,Work Centre,Operator ID,Operator Name,Hours Worked,Units Completed,Units Scrapped,Scrap Reason,Notes
+243,2026-07-06,JOB-1009,PRD-450,Finishing,WC-350,OP-103,"Ferreira, M.",5.0,0,7,,
+250,2026-07-07,JOB-1012,PRD-310,Casting,WC-200,OP-105,"Beaulieu, R.",5.0,0,7,,

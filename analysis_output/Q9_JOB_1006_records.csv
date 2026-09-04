@@ -1,0 +1,13 @@
+Record ID,Date,Job Number,Product Code,Stage,Work Centre,Operator ID,Operator Name,Hours Worked,Units Completed,Units Scrapped,Scrap Reason,Notes
+122,2026-06-08,JOB-1006,PRD-110,Mixing,WC-100,OP-105,"Beaulieu, R.",5.76,12,0,,
+128,2026-06-09,JOB-1006,PRD-110,Mixing,WC-100,OP-103,"Ferreira, M.",5.76,12,0,,
+141,2026-06-11,JOB-1006,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",5.79,5,1,Surface defect,
+154,2026-06-15,JOB-1006,PRD-110,Casting,WC-200,OP-104,"Osei, K.",5.79,5,1,Wrong size,
+160,2026-06-16,JOB-1006,PRD-110,Casting,WC-200,OP-102,"Nguyen, T.",5.79,5,0,,
+165,2026-06-17,JOB-1006,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",5.79,5,1,Chipped edge,
+171,2026-06-18,JOB-1006,PRD-110,Casting,WC-200,OP-102,"Nguyen, T.",4.63,4,0,,
+178,2026-06-19,JOB-1006,PRD-110,Curing,WC-300,OP-105,"Beaulieu, R.",5.53,19,0,,
+183,2026-06-22,JOB-1006,PRD-110,Curing,WC-300,OP-103,"Ferreira, M.",1.46,5,0,,
+189,2026-06-23,JOB-1006,PRD-110,Finishing,WC-350,OP-103,"Ferreira, M.",5.63,8,0,,
+196,2026-06-24,JOB-1006,PRD-110,Finishing,WC-350,OP-105,"Beaulieu, R.",7.04,10,0,,
+203,2026-06-25,JOB-1006,PRD-110,Finishing,WC-350,OP-105,"Beaulieu, R.",4.22,5,1,Cracking,

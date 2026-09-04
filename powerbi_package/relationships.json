@@ -1,0 +1,34 @@
+[
+  {
+    "from_table": "fact_labour_records",
+    "from_column": "job_number",
+    "to_table": "dim_jobs",
+    "to_column": "job_number",
+    "cardinality": "Many-to-One",
+    "cross_filter": "Both"
+  },
+  {
+    "from_table": "fact_labour_records",
+    "from_column": "product_code",
+    "to_table": "dim_products",
+    "to_column": "product_code",
+    "cardinality": "Many-to-One",
+    "cross_filter": "Both"
+  },
+  {
+    "from_table": "fact_labour_records",
+    "from_column": "work_centre",
+    "to_table": "dim_work_centres",
+    "to_column": "work_centre",
+    "cardinality": "Many-to-One",
+    "cross_filter": "Both"
+  },
+  {
+    "from_table": "fact_labour_records",
+    "from_column": "date",
+    "to_table": "dim_date",
+    "to_column": "date",
+    "cardinality": "Many-to-One",
+    "cross_filter": "Single"
+  }
+]

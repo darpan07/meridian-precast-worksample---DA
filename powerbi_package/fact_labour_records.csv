@@ -1,0 +1,170 @@
+record_id,date,job_number,product_code,stage,work_centre,operator_id,operator_name,hours_worked,units_completed,units_scrapped,scrap_reason,notes,name,labour_rate,labour_cost,quantity_ordered,status,date_closed,flag_missing_operator,flag_has_scrap_no_reason,flag_post_close_labour
+101,2026-06-01,JOB-1001,PRD-110,Mixing,WC-100,OP-104,"Osei, K.",6.17,14,0,,,Mixing,46.5,286.9,20,Closed,2026-06-17,False,False,False
+102,2026-06-02,JOB-1001,PRD-110,Mixing,WC-100,OP-101,"Kowalski, D.",2.65,6,0,,,Mixing,46.5,123.22,20,Closed,2026-06-17,False,False,False
+103,2026-06-02,JOB-1002,PRD-310,Mixing,WC-100,OP-103,"Ferreira, M.",6.75,15,0,,,Mixing,46.5,313.88,18,Closed,2026-06-13,False,False,False
+104,2026-06-03,JOB-1001,PRD-110,Casting,WC-200,OP-103,"Ferreira, M.",5.11,4,1,Surface defect,,Casting,42.75,218.45,20,Closed,2026-06-17,False,False,False
+105,2026-06-03,JOB-1002,PRD-310,Mixing,WC-100,OP-102,"Nguyen, T.",1.35,3,0,,,Mixing,46.5,62.78,18,Closed,2026-06-13,False,False,False
+106,2026-06-03,JOB-1003,PRD-120,Mixing,WC-100,OP-101,"Kowalski, D.",6.85,16,0,,,Mixing,46.5,318.52,16,Closed,2026-06-16,False,False,False
+107,2026-06-04,JOB-1001,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",6.38,5,0,,,Casting,42.75,272.74,20,Closed,2026-06-17,False,False,False
+108,2026-06-04,JOB-1002,PRD-310,Casting,WC-200,OP-102,"Nguyen, T.",4.94,4,0,,,Casting,42.75,211.19,18,Closed,2026-06-13,False,False,False
+109,2026-06-04,JOB-1003,PRD-120,Casting,WC-200,OP-105,"Beaulieu, R.",6.28,5,0,,,Casting,42.75,268.47,16,Closed,2026-06-16,False,False,False
+110,2026-06-04,JOB-1004,PRD-440,Mixing,WC-100,OP-103,"Ferreira, M.",6.15,14,0,,,Mixing,46.5,285.98,20,Closed,2026-06-17,False,False,False
+111,2026-06-05,JOB-1001,PRD-110,Casting,WC-200,OP-105,"Beaulieu, R.",6.38,5,1,Cracking,,Casting,42.75,272.74,20,Closed,2026-06-17,False,False,False
+112,2026-06-05,JOB-1002,PRD-310,Casting,WC-200,OP-103,"Ferreira, M.",6.18,5,0,,,Casting,42.75,264.2,18,Closed,2026-06-13,False,False,False
+113,2026-06-05,JOB-1003,PRD-120,Casting,WC-200,OP-102,"Nguyen, T.",5.02,4,1,Surface defect,,Casting,42.75,214.6,16,Closed,2026-06-16,False,False,False
+114,2026-06-05,JOB-1004,PRD-440,Mixing,WC-100,OP-101,"Kowalski, D.",2.64,6,0,,,Mixing,46.5,122.76,20,Closed,2026-06-17,False,False,False
+115,2026-06-05,JOB-1005,PRD-450,Mixing,WC-100,OP-104,"Osei, K.",6.65,15,0,,,Mixing,46.5,309.23,18,Closed,2026-06-18,False,False,False
+116,2026-06-08,JOB-1001,PRD-110,Casting,WC-200,OP-102,"Nguyen, T.",6.38,5,0,,,Casting,42.75,272.74,20,Closed,2026-06-17,False,False,False
+117,2026-06-08,JOB-1002,PRD-310,Casting,WC-200,OP-103,"Ferreira, M.",4.94,4,0,,,Casting,42.75,211.19,18,Closed,2026-06-13,False,False,False
+118,2026-06-08,JOB-1003,PRD-120,Casting,WC-200,OP-101,"Kowalski, D.",6.28,5,0,,,Casting,42.75,268.47,16,Closed,2026-06-16,False,False,False
+119,2026-06-08,JOB-1004,PRD-440,Casting,WC-200,OP-104,"Osei, K.",5.96,5,1,Wrong size,,Casting,42.75,254.79,20,Closed,2026-06-17,False,False,False
+120,2026-06-08,JOB-1004,PRD-440,Casting,WC-200,OP-104,"Osei, K.",5.96,5,1,Wrong size,,Casting,42.75,254.79,20,Closed,2026-06-17,False,False,False
+121,2026-06-08,JOB-1005,PRD-450,Mixing,WC-100,OP-103,"Ferreira, M.",1.33,3,0,,,Mixing,46.5,61.85,18,Closed,2026-06-18,False,False,False
+122,2026-06-08,JOB-1006,PRD-110,Mixing,WC-100,OP-105,"Beaulieu, R.",5.76,12,0,,,Mixing,46.5,267.84,24,Closed,2026-06-26,False,False,False
+123,2026-06-09,JOB-1001,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",1.28,1,0,,,Casting,42.75,54.72,20,Closed,2026-06-17,False,False,False
+124,2026-06-09,JOB-1002,PRD-310,Casting,WC-200,OP-104,"Osei, K.",6.18,5,0,,,Casting,42.75,264.2,18,Closed,2026-06-13,False,False,False
+125,2026-06-09,JOB-1003,PRD-120,Casting,WC-200,OP-102,"Nguyen, T.",2.51,2,0,,,Casting,42.75,107.3,16,Closed,2026-06-16,False,False,False
+126,2026-06-09,JOB-1004,PRD-440,Casting,WC-200,OP-101,"Kowalski, D.",5.96,5,0,,,Casting,42.75,254.79,20,Closed,2026-06-17,False,False,False
+127,2026-06-09,JOB-1005,PRD-450,Casting,WC-200,OP-105,"Beaulieu, R.",6.05,5,0,,,Casting,42.75,258.64,18,Closed,2026-06-18,False,False,False
+128,2026-06-09,JOB-1006,PRD-110,Mixing,WC-100,OP-103,"Ferreira, M.",5.76,12,0,,,Mixing,46.5,267.84,24,Closed,2026-06-26,False,False,False
+129,2026-06-09,JOB-1007,PRD-310,Mixing,WC-100,OP-102,"Nguyen, T.",5.17,11,0,,,Mixing,46.5,240.4,20,Closed,2026-06-27,False,False,False
+130,2026-06-10,JOB-1001,PRD-110,Curing,WC-300,OP-105,"Beaulieu, R.",5.51,18,0,,,Curing,28.0,154.28,20,Closed,2026-06-17,False,False,False
+131,2026-06-10,JOB-1002,PRD-310,Curing,WC-300,OP-103,"Ferreira, M.",5.55,18,0,,,Curing,28.0,155.4,18,Closed,2026-06-13,False,False,False
+132,2026-06-10,JOB-1003,PRD-120,Curing,WC-300,OP-104,"Osei, K.",5.04,16,0,,,Curing,28.0,141.12,16,Closed,2026-06-16,False,False,False
+133,2026-06-10,JOB-1004,PRD-440,Casting,WC-200,OP-102,"Nguyen, T.",5.96,5,0,,,Casting,42.75,254.79,20,Closed,2026-06-17,False,False,False
+134,2026-06-10,JOB-1005,PRD-450,Casting,WC-200,OP-101,"Kowalski, D.",6.05,5,0,,,Casting,42.75,258.64,18,Closed,2026-06-18,False,False,False
+135,2026-06-10,JOB-1010,PRD-110,Casting,WC-200,OP-106,"Singh, A.",8.0,4,0,,,Casting,42.75,342.0,24,Closed,2026-07-04,False,False,False
+136,2026-06-11,JOB-1001,PRD-110,Curing,WC-300,OP-105,"Beaulieu, R.",0.61,2,0,,,Curing,28.0,17.08,20,Closed,2026-06-17,False,False,False
+137,2026-06-11,JOB-1002,PRD-310,Finishing,WC-350,OP-104,"Osei, K.",7.41,10,1,Surface defect,,Finishing,0.0,0.0,18,Closed,2026-06-13,False,False,False
+138,2026-06-11,JOB-1003,PRD-120,Finishing,WC-350,OP-105,"Beaulieu, R.",5.78,8,0,,,Finishing,0.0,0.0,16,Closed,2026-06-16,False,False,False
+139,2026-06-11,JOB-1004,PRD-440,Casting,WC-200,OP-103,"Ferreira, M.",5.96,5,1,Cracking,,Casting,42.75,254.79,20,Closed,2026-06-17,False,False,False
+140,2026-06-11,JOB-1005,PRD-450,Casting,WC-200,OP-102,"Nguyen, T.",4.84,4,0,,,Casting,42.75,206.91,18,Closed,2026-06-18,False,False,False
+141,2026-06-11,JOB-1006,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",5.79,5,1,Surface defect,,Casting,42.75,247.52,24,Closed,2026-06-26,False,False,False
+142,2026-06-11,JOB-1010,PRD-110,Casting,WC-200,OP-106,"Singh, A.",8.0,4,0,,,Casting,42.75,342.0,24,Closed,2026-07-04,False,False,False
+143,2026-06-12,JOB-1001,PRD-110,Finishing,WC-350,OP-102,"Nguyen, T.",7.14,10,0,,,Finishing,0.0,0.0,20,Closed,2026-06-17,False,False,False
+144,2026-06-12,JOB-1002,PRD-310,Finishing,WC-350,OP-101,"Kowalski, D.",4.72,7,0,,,Finishing,0.0,0.0,18,Closed,2026-06-13,False,False,False
+145,2026-06-12,JOB-1003,PRD-120,Finishing,WC-350,OP-103,"Ferreira, M.",5.05,7,0,,,Finishing,0.0,0.0,16,Closed,2026-06-16,False,False,False
+146,2026-06-12,JOB-1004,PRD-440,Curing,WC-300,OP-104,"Osei, K.",6.33,20,0,,,Curing,28.0,177.24,20,Closed,2026-06-17,False,False,False
+147,2026-06-12,JOB-1005,PRD-450,Casting,WC-200,OP-105,"Beaulieu, R.",4.84,4,0,,,Casting,42.75,206.91,18,Closed,2026-06-18,False,False,False
+148,2026-06-12,JOB-1007,PRD-310,Curing,WC-300,,,4.5,10,0,,,Curing,28.0,126.0,20,Closed,2026-06-27,True,False,False
+149,2026-06-12,JOB-1010,PRD-110,Casting,WC-200,OP-106,"Singh, A.",8.0,4,0,,,Casting,42.75,342.0,24,Closed,2026-07-04,False,False,False
+150,2026-06-15,JOB-1001,PRD-110,Finishing,WC-350,OP-103,"Ferreira, M.",5.0,7,0,,,Finishing,0.0,0.0,20,Closed,2026-06-17,False,False,False
+151,2026-06-15,JOB-1003,PRD-120,Finishing,WC-350,OP-103,"Ferreira, M.",0.72,0,1,Wrong size,,Finishing,0.0,0.0,16,Closed,2026-06-16,False,False,False
+152,2026-06-15,JOB-1004,PRD-440,Finishing,WC-350,OP-105,"Beaulieu, R.",6.66,10,0,,,Finishing,0.0,0.0,20,Closed,2026-06-17,False,False,False
+153,2026-06-15,JOB-1005,PRD-450,Curing,WC-300,OP-102,"Nguyen, T.",5.53,18,0,,,Curing,28.0,154.84,18,Closed,2026-06-18,False,False,False
+154,2026-06-15,JOB-1006,PRD-110,Casting,WC-200,OP-104,"Osei, K.",5.79,5,1,Wrong size,,Casting,42.75,247.52,24,Closed,2026-06-26,False,False,False
+155,2026-06-15,JOB-1007,PRD-310,Mixing,WC-100,OP-101,"Kowalski, D.",4.23,9,0,,,Mixing,46.5,196.7,20,Closed,2026-06-27,False,False,False
+156,2026-06-15,JOB-1010,PRD-110,Casting,WC-200,OP-106,"Singh, A.",8.0,4,0,,,Casting,42.75,342.0,24,Closed,2026-07-04,False,False,False
+157,2026-06-16,JOB-1001,PRD-110,Finishing,WC-350,OP-102,"Nguyen, T.",2.14,2,1,Cracking,,Finishing,0.0,0.0,20,Closed,2026-06-17,False,False,False
+158,2026-06-16,JOB-1004,PRD-440,Finishing,WC-350,OP-101,"Kowalski, D.",6.66,9,1,Surface defect,,Finishing,0.0,0.0,20,Closed,2026-06-17,False,False,False
+159,2026-06-16,JOB-1005,PRD-450,Finishing,WC-350,OP-103,"Ferreira, M.",7.26,10,0,,,Finishing,0.0,0.0,18,Closed,2026-06-18,False,False,False
+160,2026-06-16,JOB-1006,PRD-110,Casting,WC-200,OP-102,"Nguyen, T.",5.79,5,0,,,Casting,42.75,247.52,24,Closed,2026-06-26,False,False,False
+161,2026-06-16,JOB-1007,PRD-310,Casting,WC-200,OP-105,"Beaulieu, R.",4.96,4,0,,,Casting,42.75,212.04,20,Closed,2026-06-27,False,False,False
+162,2026-06-16,JOB-1008,PRD-120,Mixing,WC-100,OP-104,"Osei, K.",5.9,13,0,,,Mixing,46.5,274.35,14,Closed,2026-06-27,False,False,False
+163,2026-06-16,JOB-1010,PRD-110,Casting,WC-200,OP-106,"Singh, A.",8.0,4,0,,,Casting,42.75,342.0,24,Closed,2026-07-04,False,False,False
+164,2026-06-17,JOB-1005,PRD-450,Finishing,WC-350,OP-102,"Nguyen, T.",5.8,7,1,Chipped edge,,Finishing,0.0,0.0,18,Closed,2026-06-18,False,False,False
+165,2026-06-17,JOB-1006,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",5.79,5,1,Chipped edge,,Casting,42.75,247.52,24,Closed,2026-06-26,False,False,False
+166,2026-06-17,JOB-1007,PRD-310,Casting,WC-200,OP-105,"Beaulieu, R.",6.21,5,0,,,Casting,42.75,265.48,20,Closed,2026-06-27,False,False,False
+167,2026-06-17,JOB-1008,PRD-120,Mixing,WC-100,OP-102,"Nguyen, T.",0.45,1,0,,,Mixing,46.5,20.92,14,Closed,2026-06-27,False,False,False
+168,2026-06-17,JOB-1009,PRD-450,Mixing,WC-100,OP-104,"Osei, K.",6.24,13,0,,,Mixing,46.5,290.16,22,Closed,2026-07-07,False,False,False
+169,2026-06-17,JOB-1010,PRD-110,Mixing,WC-100,OP-103,"Ferreira, M.",5.82,12,0,,,Mixing,46.5,270.63,24,Closed,2026-07-04,False,False,False
+170,2026-06-17,JOB-1010,PRD-110,Casting,WC-200,OP-106,"Singh, A.",8.0,4,0,,,Casting,42.75,342.0,24,Closed,2026-07-04,False,False,False
+171,2026-06-18,JOB-1006,PRD-110,Casting,WC-200,OP-102,"Nguyen, T.",4.63,4,0,,,Casting,42.75,197.93,24,Closed,2026-06-26,False,False,False
+172,2026-06-18,JOB-1007,PRD-310,Casting,WC-200,OP-104,"Osei, K.",6.21,5,1,Chipped edge,,Casting,42.75,265.48,20,Closed,2026-06-27,False,False,False
+173,2026-06-18,JOB-1008,PRD-120,Casting,WC-200,OP-105,"Beaulieu, R.",5.17,4,0,,,Casting,42.75,221.02,14,Closed,2026-06-27,False,False,False
+174,2026-06-18,JOB-1009,PRD-450,Mixing,WC-100,OP-103,"Ferreira, M.",4.32,9,0,,,Mixing,46.5,200.88,22,Closed,2026-07-07,False,False,False
+175,2026-06-18,JOB-1009,PRD-450,Curing,WC-300,,,4.5,10,0,,,Curing,28.0,126.0,22,Closed,2026-07-07,True,False,False
+176,2026-06-18,JOB-1010,PRD-110,Mixing,WC-100,OP-101,"Kowalski, D.",5.82,12,0,,,Mixing,46.5,270.63,24,Closed,2026-07-04,False,False,False
+177,2026-06-18,JOB-1010,PRD-110,Casting,WC-200,OP-106,"Singh, A.",8.0,4,0,,,Casting,42.75,342.0,24,Closed,2026-07-04,False,False,False
+178,2026-06-19,JOB-1006,PRD-110,Curing,WC-300,OP-105,"Beaulieu, R.",5.53,19,0,,,Curing,28.0,154.84,24,Closed,2026-06-26,False,False,False
+179,2026-06-19,JOB-1007,PRD-310,Casting,WC-200,OP-103,"Ferreira, M.",4.96,4,1,Cracking,,Casting,42.75,212.04,20,Closed,2026-06-27,False,False,False
+180,2026-06-19,JOB-1008,PRD-120,Casting,WC-200,OP-104,"Osei, K.",5.17,4,1,Wrong size,,Casting,42.75,221.02,14,Closed,2026-06-27,False,False,False
+181,2026-06-19,JOB-1009,PRD-450,Casting,WC-200,OP-102,"Nguyen, T.",6.2,5,0,,,Casting,42.75,265.05,22,Closed,2026-07-07,False,False,False
+182,2026-06-19,JOB-1010,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",5.07,4,4,Wrong size,,Casting,42.75,216.74,24,Closed,2026-07-04,False,False,False
+183,2026-06-22,JOB-1006,PRD-110,Curing,WC-300,OP-103,"Ferreira, M.",1.46,5,0,,,Curing,28.0,40.88,24,Closed,2026-06-26,False,False,False
+184,2026-06-22,JOB-1007,PRD-310,Casting,WC-200,OP-103,"Ferreira, M.",2.48,2,0,,,Casting,42.75,106.02,20,Closed,2026-06-27,False,False,False
+185,2026-06-22,JOB-1008,PRD-120,Casting,WC-200,OP-102,"Nguyen, T.",6.47,5,0,,,Casting,42.75,276.59,14,Closed,2026-06-27,False,False,False
+186,2026-06-22,JOB-1009,PRD-450,Casting,WC-200,OP-105,"Beaulieu, R.",4.96,4,1,Surface defect,,Casting,42.75,212.04,22,Closed,2026-07-07,False,False,False
+187,2026-06-22,JOB-1010,PRD-110,Casting,WC-200,OP-104,"Osei, K.",5.07,4,2,Chipped edge,,Casting,42.75,216.74,24,Closed,2026-07-04,False,False,False
+188,2026-06-22,JOB-1011,PRD-440,Mixing,WC-100,OP-101,"Kowalski, D.",5.76,13,0,,,Mixing,46.5,267.84,16,Closed,2026-07-03,False,False,False
+189,2026-06-23,JOB-1006,PRD-110,Finishing,WC-350,OP-103,"Ferreira, M.",5.63,8,0,,,Finishing,0.0,0.0,24,Closed,2026-06-26,False,False,False
+190,2026-06-23,JOB-1007,PRD-310,Curing,WC-300,OP-104,"Osei, K.",5.35,17,0,,,Curing,28.0,149.8,20,Closed,2026-06-27,False,False,False
+191,2026-06-23,JOB-1008,PRD-120,Casting,WC-200,OP-102,"Nguyen, T.",1.29,1,1,Chipped edge,,Casting,42.75,55.15,14,Closed,2026-06-27,False,False,False
+192,2026-06-23,JOB-1009,PRD-450,Casting,WC-200,OP-105,"Beaulieu, R.",6.2,5,0,,,Casting,42.75,265.05,22,Closed,2026-07-07,False,False,False
+193,2026-06-23,JOB-1010,PRD-110,Casting,WC-200,OP-102,"Nguyen, T.",6.33,5,4,Surface defect,,Casting,42.75,270.61,24,Closed,2026-07-04,False,False,False
+194,2026-06-23,JOB-1011,PRD-440,Mixing,WC-100,OP-101,"Kowalski, D.",1.33,3,0,,,Mixing,46.5,61.85,16,Closed,2026-07-03,False,False,False
+195,2026-06-23,JOB-1012,PRD-310,Mixing,WC-100,OP-101,"Kowalski, D.",5.18,12,0,,,Mixing,46.5,240.87,18,Open,,False,False,False
+196,2026-06-24,JOB-1006,PRD-110,Finishing,WC-350,OP-105,"Beaulieu, R.",7.04,10,0,,,Finishing,0.0,0.0,24,Closed,2026-06-26,False,False,False
+197,2026-06-24,JOB-1007,PRD-310,Curing,WC-300,OP-104,"Osei, K.",0.94,3,0,,,Curing,28.0,26.32,20,Closed,2026-06-27,False,False,False
+198,2026-06-24,JOB-1008,PRD-120,Curing,WC-300,OP-104,"Osei, K.",4.13,14,0,,,Curing,28.0,115.64,14,Closed,2026-06-27,False,False,False
+199,2026-06-24,JOB-1009,PRD-450,Casting,WC-200,OP-102,"Nguyen, T.",4.96,4,1,Cracking,,Casting,42.75,212.04,22,Closed,2026-07-07,False,False,False
+200,2026-06-24,JOB-1010,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",6.33,5,3,Surface defect,,Casting,42.75,270.61,24,Closed,2026-07-04,False,False,False
+201,2026-06-24,JOB-1011,PRD-440,Casting,WC-200,OP-103,"Ferreira, M.",7.25,6,0,,,Casting,42.75,309.94,16,Closed,2026-07-03,False,False,False
+202,2026-06-24,JOB-1012,PRD-310,Mixing,WC-100,OP-102,"Nguyen, T.",2.59,6,0,,,Mixing,46.5,120.43,18,Open,,False,False,False
+203,2026-06-25,JOB-1006,PRD-110,Finishing,WC-350,OP-105,"Beaulieu, R.",4.22,5,1,Cracking,,Finishing,0.0,0.0,24,Closed,2026-06-26,False,False,False
+204,2026-06-25,JOB-1007,PRD-310,Finishing,WC-350,OP-101,"Kowalski, D.",7.19,10,0,,,Finishing,0.0,0.0,20,Closed,2026-06-27,False,False,False
+205,2026-06-25,JOB-1008,PRD-120,Finishing,WC-350,OP-102,"Nguyen, T.",4.99,7,0,,,Finishing,0.0,0.0,14,Closed,2026-06-27,False,False,False
+206,2026-06-25,JOB-1009,PRD-450,Casting,WC-200,OP-104,"Osei, K.",4.96,4,0,,,Casting,42.75,212.04,22,Closed,2026-07-07,False,False,False
+207,2026-06-25,JOB-1010,PRD-110,Casting,WC-200,OP-103,"Ferreira, M.",5.07,4,3,Cracking,,Casting,42.75,216.74,24,Closed,2026-07-04,False,False,False
+208,2026-06-26,JOB-1007,PRD-310,Finishing,WC-350,OP-103,"Ferreira, M.",7.19,10,0,,,Finishing,0.0,0.0,20,Closed,2026-06-27,False,False,False
+209,2026-06-26,JOB-1008,PRD-120,Finishing,WC-350,OP-101,"Kowalski, D.",4.99,7,0,,,Finishing,0.0,0.0,14,Closed,2026-06-27,False,False,False
+210,2026-06-26,JOB-1009,PRD-450,Curing,WC-300,OP-105,"Beaulieu, R.",5.92,19,0,,,Curing,28.0,165.76,22,Closed,2026-07-07,False,False,False
+211,2026-06-26,JOB-1010,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",2.53,2,3,Chipped edge,,Casting,42.75,108.16,24,Closed,2026-07-04,False,False,False
+212,2026-06-26,JOB-1011,PRD-440,Casting,WC-200,OP-102,"Nguyen, T.",7.25,6,0,,,Casting,42.75,309.94,16,Closed,2026-07-03,False,False,False
+213,2026-06-26,JOB-1012,PRD-310,Casting,WC-200,OP-104,"Osei, K.",4.83,4,0,,,Casting,42.75,206.48,18,Open,,False,False,False
+214,2026-06-29,JOB-1009,PRD-450,Curing,WC-300,OP-105,"Beaulieu, R.",0.93,3,0,,,Curing,28.0,26.04,22,Closed,2026-07-07,False,False,False
+215,2026-06-29,JOB-1010,PRD-110,Curing,WC-300,OP-101,"Kowalski, D.",6.2,21,0,,,Curing,28.0,173.6,24,Closed,2026-07-04,False,False,False
+216,2026-06-29,JOB-1011,PRD-440,Casting,WC-200,OP-103,"Ferreira, M.",4.83,4,0,,,Casting,42.75,206.48,16,Closed,2026-07-03,False,False,False
+217,2026-06-29,JOB-1012,PRD-310,Casting,WC-200,OP-104,"Osei, K.",6.04,5,0,,,Casting,42.75,258.21,18,Open,,False,False,False
+218,2026-06-29,JOB-1013,PRD-120,Mixing,WC-100,OP-105,"Beaulieu, R.",5.66,12,0,,,Mixing,46.5,263.19,20,Open,,False,False,False
+219,2026-06-29,JOB-1014,PRD-450,Mixing,WC-100,OP-102,"Nguyen, T.",7.06,16,0,,,Mixing,46.5,328.29,16,Closed,2026-07-10,False,False,False
+220,2026-06-30,JOB-1009,PRD-450,Finishing,WC-350,OP-104,"Osei, K.",6.18,9,0,,,Finishing,0.0,0.0,22,Closed,2026-07-07,False,False,False
+221,2026-06-30,JOB-1010,PRD-110,Curing,WC-300,OP-104,"Osei, K.",0.89,3,0,,,Curing,28.0,24.92,24,Closed,2026-07-04,False,False,False
+222,2026-06-30,JOB-1011,PRD-440,Curing,WC-300,OP-102,"Nguyen, T.",5.05,16,0,,,Curing,28.0,141.4,16,Closed,2026-07-03,False,False,False
+223,2026-06-30,JOB-1011,PRD-440,Finishing,WC-350,OP-101,"Kowalski, D.",4.2,6,0,,extra units run,Finishing,0.0,0.0,16,Closed,2026-07-03,False,False,False
+224,2026-06-30,JOB-1012,PRD-310,Casting,WC-200,OP-105,"Beaulieu, R.",6.04,5,0,,,Casting,42.75,258.21,18,Open,,False,False,False
+225,2026-06-30,JOB-1013,PRD-120,Mixing,WC-100,OP-101,"Kowalski, D.",3.77,8,0,,,Mixing,46.5,175.3,20,Open,,False,False,False
+226,2026-06-30,JOB-1014,PRD-450,Casting,WC-200,OP-103,"Ferreira, M.",7.53,6,0,,,Casting,42.75,321.91,16,Closed,2026-07-10,False,False,False
+227,2026-07-01,JOB-1009,PRD-450,Finishing,WC-350,OP-101,"Kowalski, D.",6.87,10,0,,,Finishing,0.0,0.0,22,Closed,2026-07-07,False,False,False
+228,2026-07-01,JOB-1010,PRD-110,Finishing,WC-350,OP-104,"Osei, K.",7.24,7,3,Chipped edge,,Finishing,0.0,0.0,24,Closed,2026-07-04,False,False,False
+229,2026-07-01,JOB-1011,PRD-440,Finishing,WC-350,OP-102,"Nguyen, T.",6.96,10,0,,,Finishing,0.0,0.0,16,Closed,2026-07-03,False,False,False
+230,2026-07-01,JOB-1012,PRD-310,Casting,WC-200,OP-103,"Ferreira, M.",4.83,4,0,,,Casting,42.75,206.48,18,Open,,False,False,False
+231,2026-07-01,JOB-1013,PRD-120,Casting,WC-200,OP-105,"Beaulieu, R.",5.74,5,0,,,Casting,42.75,245.39,20,Open,,False,False,False
+232,2026-07-02,JOB-1009,PRD-450,Finishing,WC-350,OP-103,"Ferreira, M.",2.06,3,0,,,Finishing,0.0,0.0,22,Closed,2026-07-07,False,False,False
+233,2026-07-02,JOB-1010,PRD-110,Finishing,WC-350,OP-101,"Kowalski, D.",6.52,5,4,Cracking,,Finishing,0.0,0.0,24,Closed,2026-07-04,False,False,False
+234,2026-07-02,JOB-1011,PRD-440,Finishing,WC-350,OP-104,"Osei, K.",4.18,6,0,,,Finishing,0.0,0.0,16,Closed,2026-07-03,False,False,False
+235,2026-07-02,JOB-1012,PRD-310,Curing,WC-300,OP-102,"Nguyen, T.",5.59,18,0,,,Curing,28.0,156.52,18,Open,,False,False,False
+236,2026-07-02,JOB-1013,PRD-120,Casting,WC-200,OP-105,"Beaulieu, R.",4.59,4,1,Cracking,,Casting,42.75,196.22,20,Open,,False,False,False
+237,2026-07-02,JOB-1014,PRD-450,Casting,WC-200,OP-103,"Ferreira, M.",5.02,4,1,Wrong size,,Casting,42.75,214.6,16,Closed,2026-07-10,False,False,False
+238,2026-07-03,JOB-1010,PRD-110,Finishing,WC-350,OP-102,"Nguyen, T.",3.62,2,3,Wrong size,,Finishing,0.0,0.0,24,Closed,2026-07-04,False,False,False
+239,2026-07-03,JOB-1012,PRD-310,Finishing,WC-350,OP-103,"Ferreira, M.",5.99,7,1,Cracking,,Finishing,0.0,0.0,18,Open,,False,False,False
+240,2026-07-03,JOB-1013,PRD-120,Casting,WC-200,OP-105,"Beaulieu, R.",5.74,5,0,,,Casting,42.75,245.39,20,Open,,False,False,False
+241,2026-07-03,JOB-1014,PRD-450,Casting,WC-200,OP-101,"Kowalski, D.",6.27,5,0,,,Casting,42.75,268.04,16,Closed,2026-07-10,False,False,False
+242,2026-07-03,JOB-1015,PRD-110,Mixing,WC-100,OP-104,"Osei, K.",5.07,11,0,,,Mixing,46.5,235.76,18,Open,,False,False,False
+243,2026-07-06,JOB-1009,PRD-450,Finishing,WC-350,OP-103,"Ferreira, M.",5.0,0,7,,,Finishing,0.0,0.0,22,Closed,2026-07-07,False,True,False
+244,2026-07-06,JOB-1012,PRD-310,Finishing,WC-350,OP-105,"Beaulieu, R.",6.74,9,0,,,Finishing,0.0,0.0,18,Open,,False,False,False
+245,2026-07-06,JOB-1013,PRD-120,Casting,WC-200,OP-101,"Kowalski, D.",5.74,5,1,Wrong size,,Casting,42.75,245.39,20,Open,,False,False,False
+246,2026-07-06,JOB-1013,PRD-120,Casting,WC-200,OP-102,"Nguyen, T.",11.75,9,0,,,Casting,42.75,502.31,20,Open,,False,False,False
+247,2026-07-06,JOB-1014,PRD-450,Casting,WC-200,OP-103,"Ferreira, M.",1.25,1,0,,,Casting,42.75,53.44,16,Closed,2026-07-10,False,False,False
+248,2026-07-06,JOB-1015,PRD-110,Mixing,WC-100,OP-104,"Osei, K.",3.23,7,0,,,Mixing,46.5,150.2,18,Open,,False,False,False
+249,2026-07-07,JOB-1012,PRD-310,Finishing,WC-350,OP-103,"Ferreira, M.",0.75,1,0,,,Finishing,0.0,0.0,18,Open,,False,False,False
+250,2026-07-07,JOB-1012,PRD-310,Casting,WC-200,OP-105,"Beaulieu, R.",5.0,0,7,,,Casting,42.75,213.75,18,Open,,False,True,False
+251,2026-07-07,JOB-1013,PRD-120,Casting,WC-200,OP-103,"Ferreira, M.",1.15,1,0,,,Casting,42.75,49.16,20,Open,,False,False,False
+252,2026-07-07,JOB-1014,PRD-450,Curing,WC-300,OP-101,"Kowalski, D.",5.13,16,0,,,Curing,28.0,143.64,16,Closed,2026-07-10,False,False,False
+253,2026-07-07,JOB-1015,PRD-110,Casting,WC-200,OP-102,"Nguyen, T.",4.86,4,0,,,Casting,42.75,207.76,18,Open,,False,False,False
+254,2026-07-08,JOB-1013,PRD-120,Curing,WC-300,OP-104,"Osei, K.",5.48,18,0,,,Curing,28.0,153.44,20,Open,,False,False,False
+255,2026-07-08,JOB-1014,PRD-450,Finishing,WC-350,OP-105,"Beaulieu, R.",5.34,7,1,Cracking,,Finishing,0.0,0.0,16,Closed,2026-07-10,False,False,False
+256,2026-07-08,JOB-1015,PRD-110,Casting,WC-200,OP-103,"Ferreira, M.",6.07,5,1,Chipped edge,,Casting,42.75,259.49,18,Open,,False,False,False
+257,2026-07-09,JOB-1013,PRD-120,Curing,WC-300,OP-103,"Ferreira, M.",0.61,2,0,,,Curing,28.0,17.08,20,Open,,False,False,False
+258,2026-07-09,JOB-1014,PRD-450,Finishing,WC-350,OP-104,"Osei, K.",5.34,7,1,Surface defect,,Finishing,0.0,0.0,16,Closed,2026-07-10,False,False,False
+259,2026-07-09,JOB-1015,PRD-110,Casting,WC-200,OP-101,"Kowalski, D.",6.07,5,0,,,Casting,42.75,259.49,18,Open,,False,False,False
+260,2026-07-10,JOB-1013,PRD-120,Finishing,WC-350,OP-104,"Osei, K.",6.63,8,1,Cracking,,Finishing,0.0,0.0,20,Open,,False,False,False
+261,2026-07-10,JOB-1015,PRD-110,Casting,WC-200,OP-103,"Ferreira, M.",4.86,4,0,,,Casting,42.75,207.76,18,Open,,False,False,False
+262,2026-07-13,JOB-1013,PRD-120,Finishing,WC-350,OP-104,"Osei, K.",5.16,7,0,,,Finishing,0.0,0.0,20,Open,,False,False,False
+263,2026-07-13,JOB-1014,PRD-450,Casting,WC-200,OP-105,"Beaulieu, R.",6.5,0,0,,,Casting,42.75,277.88,16,Closed,2026-07-10,False,False,True
+264,2026-07-13,JOB-1015,PRD-110,Curing,WC-300,OP-103,"Ferreira, M.",5.51,18,0,,,Curing,28.0,154.28,18,Open,,False,False,False
+265,2026-07-14,JOB-1013,PRD-120,Finishing,WC-350,OP-102,"Nguyen, T.",2.95,4,0,,,Finishing,0.0,0.0,20,Open,,False,False,False
+266,2026-07-14,JOB-1014,PRD-450,Finishing,WC-350,OP-104,"Osei, K.",5.0,0,0,,,Finishing,0.0,0.0,16,Closed,2026-07-10,False,False,True
+267,2026-07-14,JOB-1015,PRD-110,Finishing,WC-350,OP-103,"Ferreira, M.",6.8,9,1,Cracking,,Finishing,0.0,0.0,18,Open,,False,False,False
+268,2026-07-15,JOB-1015,PRD-110,Finishing,WC-350,OP-102,"Nguyen, T.",4.76,7,0,,,Finishing,0.0,0.0,18,Open,,False,False,False
+269,2026-07-16,JOB-1015,PRD-110,Finishing,WC-350,OP-102,"Nguyen, T.",0.68,1,0,,,Finishing,0.0,0.0,18,Open,,False,False,False

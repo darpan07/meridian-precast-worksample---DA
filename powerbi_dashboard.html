@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meridian Precast — Power BI Production Analytics</title>
+    <meta name="description" content="Power BI-style interactive production analytics dashboard for Meridian Precast with slicers, cross-filtering, and drill-down capabilities">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* ══════════════════════════════════════════════════════════════════
+           Power BI Design System
+           ══════════════════════════════════════════════════════════════════ */
+        :root {
+            /* Power BI Canvas */
+            --pbi-canvas: #F2F2F2;
+            --pbi-card-bg: #FFFFFF;
+            --pbi-card-border: #E8E8E8;
+            --pbi-card-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            --pbi-card-shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+            
+            /* Power BI Header/Ribbon */
+            --pbi-ribbon-bg: #1B1B1B;
+            --pbi-ribbon-text: #FFFFFF;
+            --pbi-ribbon-accent: #F2C811;
+            --pbi-tab-active: #333333;
+            --pbi-tab-hover: #2A2A2A;
+            
+            /* Power BI Palette */
+            --pbi-blue: #118DFF;
+            --pbi-teal: #12B5CB;
+            --pbi-orange: #E66C37;
+            --pbi-green: #6B8E23;
+            --pbi-red: #D64045;
+            --pbi-purple: #7030A0;
+            --pbi-gold: #F2C811;
+            --pbi-dark-blue: #004C6D;
+            
+            /* Text */
+            --pbi-text-primary: #252423;
+            --pbi-text-secondary: #605E5C;
+            --pbi-text-muted: #8A8886;
+            --pbi-text-light: #A19F9D;
+            
+            /* Slicer */
+            --pbi-slicer-selected: #118DFF;
+            --pbi-slicer-hover: #DEECF9;
+            --pbi-slicer-border: #C8C6C4;
+            
+            /* Layout */
+            --pbi-gap: 8px;
+            --pbi-radius: 4px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', 'Inter', -apple-system, sans-serif;
+            background: var(--pbi-canvas);
+            color: var(--pbi-text-primary);
+            line-height: 1.4;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── Power BI Ribbon / Title Bar ─── */
+        .pbi-ribbon {
+            background: var(--pbi-ribbon-bg);
+            color: var(--pbi-ribbon-text);
+            display: flex;
+            align-items: center;
+            height: 48px;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .pbi-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 24px;
+        }
+
+        .pbi-logo-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--pbi-ribbon-accent);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: #1B1B1B;
+        }
+
+        .pbi-logo-text {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .pbi-logo-text span {
+            color: var(--pbi-ribbon-accent);
+            font-weight: 700;
+        }
+
+        /* ─── Tab Navigation (Power BI page tabs) ─── */
+        .pbi-tabs {
+            display: flex;
+            align-items: stretch;
+            height: 36px;
+            background: #2D2D2D;
+            border-bottom: 1px solid #404040;
+            padding: 0 16px;
+        }
+
+        .pbi-tab {
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #BCBCBC;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            position: relative;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .pbi-tab:hover {
+            color: #FFFFFF;
+            background: var(--pbi-tab-hover);
+        }
+
+        .pbi-tab.active {
+            color: #FFFFFF;
+            background: var(--pbi-tab-active);
+        }
+
+        .pbi-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--pbi-ribbon-accent);
+        }
+
+        /* ─── Canvas (report area) ─── */
+        .pbi-canvas {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* ─── Page Content ─── */
+        .pbi-page { display: none; }
+        .pbi-page.active { display: block; }
+
+        /* ─── Card Visual ─── */
+        .pbi-card {
+            background: var(--pbi-card-bg);
+            border: 1px solid var(--pbi-card-border);
+            border-radius: var(--pbi-radius);
+            box-shadow: var(--pbi-card-shadow);
+            transition: box-shadow 0.2s;
+            overflow: hidden;
+        }
+
+        .pbi-card:hover {
+            box-shadow: var(--pbi-card-shadow-hover);
+        }
+
+        .pbi-card-header {
+            padding: 12px 16px 4px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--pbi-text-primary);
+            text-transform: none;
+            border-bottom: none;
+        }
+
+        .pbi-card-body {
+            padding: 8px 16px 16px 16px;
+        }
+
+        /* ─── KPI Card ─── */
+        .pbi-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--pbi-gap);
+            margin-bottom: var(--pbi-gap);
+        }
+
+        .pbi-kpi {
+            background: var(--pbi-card-bg);
+            border: 1px solid var(--pbi-card-border);
+            border-radius: var(--pbi-radius);
+            box-shadow: var(--pbi-card-shadow);
+            padding: 16px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .pbi-kpi:hover {
+            box-shadow: var(--pbi-card-shadow-hover);
+            transform: translateY(-1px);
+        }
+
+        .pbi-kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--pbi-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+        }
+
+        .pbi-kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+
+        .pbi-kpi-sub {
+            font-size: 11px;
+            color: var(--pbi-text-light);
+        }
+
+        .pbi-kpi-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        /* ─── Grid Layouts ─── */
+        .pbi-row {
+            display: grid;
+            gap: var(--pbi-gap);
+            margin-bottom: var(--pbi-gap);
+        }
+
+        .pbi-row-2 { grid-template-columns: 1fr 1fr; }
+        .pbi-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .pbi-row-1-2 { grid-template-columns: 1fr 2fr; }
+        .pbi-row-2-1 { grid-template-columns: 2fr 1fr; }
+        .pbi-row-3-2 { grid-template-columns: 3fr 2fr; }
+
+        /* ─── Slicer Panel ─── */
+        .pbi-slicer {
+            background: var(--pbi-card-bg);
+            border: 1px solid var(--pbi-card-border);
+            border-radius: var(--pbi-radius);
+            box-shadow: var(--pbi-card-shadow);
+            padding: 12px 16px;
+        }
+
+        .pbi-slicer-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--pbi-text-primary);
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #EDEBE9;
+        }
+
+        .pbi-slicer-items {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .pbi-slicer-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--pbi-text-secondary);
+            transition: all 0.1s;
+            user-select: none;
+        }
+
+        .pbi-slicer-item:hover {
+            background: var(--pbi-slicer-hover);
+        }
+
+        .pbi-slicer-item.selected {
+            background: rgba(17, 141, 255, 0.08);
+            color: var(--pbi-slicer-selected);
+            font-weight: 600;
+        }
+
+        .pbi-slicer-check {
+            width: 16px;
+            height: 16px;
+            border: 1.5px solid var(--pbi-slicer-border);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+
+        .pbi-slicer-item.selected .pbi-slicer-check {
+            background: var(--pbi-slicer-selected);
+            border-color: var(--pbi-slicer-selected);
+            color: white;
+        }
+
+        .pbi-slicer-check::after {
+            content: '✓';
+            font-size: 10px;
+            font-weight: 700;
+            opacity: 0;
+            color: white;
+        }
+
+        .pbi-slicer-item.selected .pbi-slicer-check::after {
+            opacity: 1;
+        }
+
+        /* ─── Horizontal slicer bar ─── */
+        .pbi-slicer-bar {
+            background: var(--pbi-card-bg);
+            border: 1px solid var(--pbi-card-border);
+            border-radius: var(--pbi-radius);
+            box-shadow: var(--pbi-card-shadow);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: var(--pbi-gap);
+        }
+
+        .pbi-slicer-bar-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--pbi-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-right: 4px;
+            white-space: nowrap;
+        }
+
+        .pbi-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid #D2D0CE;
+            background: transparent;
+            color: var(--pbi-text-secondary);
+        }
+
+        .pbi-chip:hover {
+            background: var(--pbi-slicer-hover);
+            border-color: var(--pbi-slicer-selected);
+        }
+
+        .pbi-chip.active {
+            background: var(--pbi-slicer-selected);
+            border-color: var(--pbi-slicer-selected);
+            color: white;
+            font-weight: 500;
+        }
+
+        /* ─── Table / Matrix ─── */
+        .pbi-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .pbi-table th {
+            text-align: left;
+            padding: 8px 12px;
+            font-weight: 600;
+            color: var(--pbi-text-primary);
+            background: #FAF9F8;
+            border-bottom: 2px solid #EDEBE9;
+            font-size: 11px;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+
+        .pbi-table td {
+            padding: 6px 12px;
+            border-bottom: 1px solid #F3F2F1;
+            color: var(--pbi-text-secondary);
+            vertical-align: middle;
+        }
+
+        .pbi-table tbody tr:hover td {
+            background: rgba(17, 141, 255, 0.04);
+        }
+
+        .pbi-table .text-right { text-align: right; }
+        .pbi-table .text-center { text-align: center; }
+
+        .pbi-table .total-row td {
+            font-weight: 700;
+            color: var(--pbi-text-primary);
+            border-top: 2px solid #EDEBE9;
+            background: #FAF9F8;
+        }
+
+        /* ─── Status badges ─── */
+        .pbi-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .pbi-badge-fail { background: #FDE7E7; color: var(--pbi-red); }
+        .pbi-badge-warn { background: #FFF4CE; color: #986F0B; }
+        .pbi-badge-pass { background: #DFF6DD; color: #107C10; }
+        .pbi-badge-info { background: #DEECF9; color: var(--pbi-blue); }
+
+        .pbi-badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .pbi-badge-fail .pbi-badge-dot { background: var(--pbi-red); }
+        .pbi-badge-warn .pbi-badge-dot { background: #986F0B; }
+        .pbi-badge-pass .pbi-badge-dot { background: #107C10; }
+
+        /* ─── Chart container ─── */
+        .pbi-chart-wrap {
+            position: relative;
+            height: 280px;
+        }
+
+        .pbi-chart-wrap.tall { height: 360px; }
+        .pbi-chart-wrap.short { height: 200px; }
+
+        /* ─── Conditional formatting bars ─── */
+        .pbi-data-bar {
+            position: relative;
+            height: 18px;
+            background: #F3F2F1;
+            border-radius: 2px;
+            overflow: hidden;
+            min-width: 80px;
+        }
+
+        .pbi-data-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        .pbi-data-bar-label {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--pbi-text-primary);
+        }
+
+        /* ─── Insight Card ─── */
+        .pbi-insight {
+            padding: 12px 16px;
+            border-left: 3px solid var(--pbi-blue);
+            background: #F9F9F9;
+            border-radius: 0 var(--pbi-radius) var(--pbi-radius) 0;
+            margin-top: 8px;
+        }
+
+        .pbi-insight h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--pbi-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .pbi-insight p {
+            font-size: 11px;
+            color: var(--pbi-text-secondary);
+            line-height: 1.6;
+        }
+
+        .pbi-insight.warn { border-left-color: #F2C811; }
+        .pbi-insight.danger { border-left-color: var(--pbi-red); }
+        .pbi-insight.success { border-left-color: #107C10; }
+
+        /* ─── Comparison Layout ─── */
+        .pbi-compare {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 0;
+            align-items: center;
+        }
+
+        .pbi-compare-col {
+            padding: 12px;
+        }
+
+        .pbi-compare-vs {
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--pbi-text-muted);
+        }
+
+        .pbi-metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #F3F2F1;
+        }
+
+        .pbi-metric-label {
+            font-size: 11px;
+            color: var(--pbi-text-muted);
+        }
+
+        .pbi-metric-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--pbi-text-primary);
+        }
+
+        /* ─── Watermark ─── */
+        .pbi-watermark {
+            text-align: center;
+            padding: 12px;
+            font-size: 10px;
+            color: var(--pbi-text-light);
+            border-top: 1px solid #EDEBE9;
+            margin-top: 8px;
+        }
+
+        /* ─── Tooltip ─── */
+        .pbi-tooltip-custom {
+            position: absolute;
+            background: white;
+            border: 1px solid #E1DFDD;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 11px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+        }
+
+        /* ─── Animated number ─── */
+        @keyframes pbiCountUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pbi-animated {
+            animation: pbiCountUp 0.5s ease forwards;
+        }
+
+        /* ─── Filter indicator ─── */
+        .pbi-filter-active {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: rgba(17, 141, 255, 0.1);
+            border-radius: 2px;
+            font-size: 10px;
+            color: var(--pbi-blue);
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .pbi-filter-active .x-btn {
+            cursor: pointer;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            .pbi-kpi-grid { grid-template-columns: repeat(3, 1fr); }
+            .pbi-row-2, .pbi-row-3, .pbi-row-1-2, .pbi-row-2-1, .pbi-row-3-2 { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .pbi-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .pbi-tabs { overflow-x: auto; }
+            .pbi-compare { grid-template-columns: 1fr; }
+            .pbi-compare-vs { padding: 8px 0; }
+        }
+
+        /* ─── Print styles ─── */
+        @media print {
+            .pbi-ribbon, .pbi-tabs { position: static; }
+            .pbi-card { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ══════════════ Power BI Ribbon ══════════════ -->
+    <header class="pbi-ribbon" id="pbi-ribbon">
+        <div class="pbi-logo">
+            <div class="pbi-logo-icon">PBI</div>
+            <div class="pbi-logo-text"><span>Power BI</span> | Meridian Precast Analytics</div>
+        </div>
+        <div style="margin-left:auto; display:flex; align-items:center; gap:12px; font-size:11px; color:#999;">
+            <span>169 Records</span>
+            <span>·</span>
+            <span>15 Jobs</span>
+            <span>·</span>
+            <span>5 Products</span>
+            <span>·</span>
+            <span>4 Work Centres</span>
+        </div>
+    </header>
+
+    <!-- ══════════════ Page Tabs ══════════════ -->
+    <nav class="pbi-tabs" id="pbi-tabs">
+        <button class="pbi-tab active" onclick="showPage('executive')" id="tab-executive">Executive Summary</button>
+        <button class="pbi-tab" onclick="showPage('quality')" id="tab-quality">Data Quality Audit</button>
+        <button class="pbi-tab" onclick="showPage('labour')" id="tab-labour">Labour Cost Analysis</button>
+        <button class="pbi-tab" onclick="showPage('products')" id="tab-products">Product Profitability</button>
+        <button class="pbi-tab" onclick="showPage('comparison')" id="tab-comparison">Job Comparison</button>
+    </nav>
+
+    <!-- ══════════════ Report Canvas ══════════════ -->
+    <div class="pbi-canvas">
+
+        <!-- ┌─────────────────────────────────────────────────────────────┐
+             │  PAGE 1: EXECUTIVE SUMMARY                                  │
+             └─────────────────────────────────────────────────────────────┘ -->
+        <div class="pbi-page active" id="page-executive">
+            <!-- KPI Bar -->
+            <div class="pbi-kpi-grid">
+                <div class="pbi-kpi" id="kpi-records">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-blue)"></div>
+                    <div class="pbi-kpi-label">Total Records</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-blue)">169</div>
+                    <div class="pbi-kpi-sub">Labour entries analyzed</div>
+                </div>
+                <div class="pbi-kpi" id="kpi-hours">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-teal)"></div>
+                    <div class="pbi-kpi-label">Total Hours</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-teal)">873.6</div>
+                    <div class="pbi-kpi-sub">Across 4 work centres</div>
+                </div>
+                <div class="pbi-kpi" id="kpi-cost">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-purple)"></div>
+                    <div class="pbi-kpi-label">Labour Cost</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-purple)">$27,238</div>
+                    <div class="pbi-kpi-sub">Excl. Finishing ($0/hr)</div>
+                </div>
+                <div class="pbi-kpi" id="kpi-violations">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-red)"></div>
+                    <div class="pbi-kpi-label">Rule Violations</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-red)">11</div>
+                    <div class="pbi-kpi-sub">Across 7 business rules</div>
+                </div>
+                <div class="pbi-kpi" id="kpi-scrap">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-orange)"></div>
+                    <div class="pbi-kpi-label">Scrap Rate</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-orange)">6.2%</div>
+                    <div class="pbi-kpi-sub">49 of 790 units</div>
+                </div>
+            </div>
+
+            <!-- Slicer Bar -->
+            <div class="pbi-slicer-bar" id="exec-slicer">
+                <span class="pbi-slicer-bar-label">Filter by Rule:</span>
+                <button class="pbi-chip active" onclick="filterRule('all', this)">All</button>
+                <button class="pbi-chip" onclick="filterRule('R1', this)">R1 Overtime</button>
+                <button class="pbi-chip" onclick="filterRule('R2', this)">R2 Post-Close</button>
+                <button class="pbi-chip" onclick="filterRule('R3', this)">R3 Missing Op</button>
+                <button class="pbi-chip" onclick="filterRule('R4', this)">R4 No Scrap Reason</button>
+                <button class="pbi-chip" onclick="filterRule('R5', this)">R5 Overprod.</button>
+                <button class="pbi-chip" onclick="filterRule('R6', this)">R6 Duplicates</button>
+                <button class="pbi-chip" onclick="filterRule('R8', this)">R8 Underpriced</button>
+            </div>
+
+            <div class="pbi-row pbi-row-3-2">
+                <!-- Violations by Rule -->
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Violations by Business Rule</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-chart-wrap">
+                            <canvas id="chart-violations-rule"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Data Quality Summary -->
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Data Quality Scorecard</div>
+                    <div class="pbi-card-body">
+                        <table class="pbi-table" id="quality-scorecard">
+                            <thead>
+                                <tr>
+                                    <th>Q#</th>
+                                    <th>Rule</th>
+                                    <th>Check</th>
+                                    <th>Found</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-rule="R3"><td>Q1</td><td>R3</td><td>Missing operator</td><td>2 records</td><td class="text-center"><span class="pbi-badge pbi-badge-fail"><span class="pbi-badge-dot"></span>FAIL</span></td></tr>
+                                <tr data-rule="R6"><td>Q2</td><td>R6</td><td>Duplicate records</td><td>1 pair</td><td class="text-center"><span class="pbi-badge pbi-badge-fail"><span class="pbi-badge-dot"></span>FAIL</span></td></tr>
+                                <tr data-rule="R1"><td>Q3</td><td>R1</td><td>Overtime (>8 hrs)</td><td>2 instances</td><td class="text-center"><span class="pbi-badge pbi-badge-fail"><span class="pbi-badge-dot"></span>FAIL</span></td></tr>
+                                <tr data-rule="R4"><td>Q4</td><td>R4</td><td>Missing scrap reason</td><td>14 units</td><td class="text-center"><span class="pbi-badge pbi-badge-fail"><span class="pbi-badge-dot"></span>FAIL</span></td></tr>
+                                <tr data-rule="R2"><td>Q5</td><td>R2</td><td>Labour after close</td><td>2 records</td><td class="text-center"><span class="pbi-badge pbi-badge-fail"><span class="pbi-badge-dot"></span>FAIL</span></td></tr>
+                                <tr data-rule="R5"><td>Q6</td><td>R5</td><td>Overproduction</td><td>1 job</td><td class="text-center"><span class="pbi-badge pbi-badge-fail"><span class="pbi-badge-dot"></span>FAIL</span></td></tr>
+                                <tr data-rule="R8"><td>Q7</td><td>R8</td><td>Product below cost</td><td>1 product</td><td class="text-center"><span class="pbi-badge pbi-badge-fail"><span class="pbi-badge-dot"></span>FAIL</span></td></tr>
+                                <tr data-rule="R7"><td>Q8</td><td>R7</td><td>Labour cost calc</td><td>$0/hr rate</td><td class="text-center"><span class="pbi-badge pbi-badge-warn"><span class="pbi-badge-dot"></span>WARN</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pbi-row pbi-row-2">
+                <!-- Operator Hours Distribution -->
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Total Hours by Operator</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-chart-wrap">
+                            <canvas id="chart-operator-hours"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Hours by Work Centre -->
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Hours Distribution by Work Centre</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-chart-wrap">
+                            <canvas id="chart-hours-wc"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ┌─────────────────────────────────────────────────────────────┐
+             │  PAGE 2: DATA QUALITY AUDIT                                 │
+             └─────────────────────────────────────────────────────────────┘ -->
+        <div class="pbi-page" id="page-quality">
+            <div class="pbi-slicer-bar">
+                <span class="pbi-slicer-bar-label">Severity:</span>
+                <button class="pbi-chip active" onclick="filterSeverity('all', this)">All</button>
+                <button class="pbi-chip" onclick="filterSeverity('fail', this)">🔴 Failures</button>
+                <button class="pbi-chip" onclick="filterSeverity('warn', this)">🟡 Warnings</button>
+            </div>
+
+            <!-- Q1: Missing Operator -->
+            <div class="pbi-row pbi-row-2" style="margin-bottom: var(--pbi-gap);">
+                <div class="pbi-card violation-card" data-severity="fail">
+                    <div class="pbi-card-header">Q1 — Missing Operator (Rule R3) <span class="pbi-badge pbi-badge-fail" style="margin-left:8px"><span class="pbi-badge-dot"></span>2 Records</span></div>
+                    <div class="pbi-card-body">
+                        <table class="pbi-table">
+                            <thead><tr><th>Record</th><th>Date</th><th>Job</th><th>Stage</th><th>Hours</th><th>Issue</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>148</strong></td><td>2026-06-12</td><td>JOB-1007</td><td>Curing</td><td class="text-right">4.50</td><td><span class="pbi-badge pbi-badge-fail">Blank Operator</span></td></tr>
+                                <tr><td><strong>175</strong></td><td>2026-06-18</td><td>JOB-1009</td><td>Mixing</td><td class="text-right">5.79</td><td><span class="pbi-badge pbi-badge-fail">Blank Operator</span></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="pbi-insight">
+                            <h4>💡 Key Insight</h4>
+                            <p>Both records are missing Operator ID and Operator Name. These hours (10.29 total) cannot be attributed to any specific worker for payroll or performance tracking.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2: Duplicates -->
+                <div class="pbi-card violation-card" data-severity="fail">
+                    <div class="pbi-card-header">Q2 — Duplicate Records (Rule R6) <span class="pbi-badge pbi-badge-fail" style="margin-left:8px"><span class="pbi-badge-dot"></span>1 Pair</span></div>
+                    <div class="pbi-card-body">
+                        <table class="pbi-table">
+                            <thead><tr><th>Record</th><th>Date</th><th>Job</th><th>Stage</th><th>Operator</th><th>Hours</th><th>Units</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>119</strong></td><td>2026-06-08</td><td>JOB-1004</td><td>Casting</td><td>OP-104</td><td class="text-right">5.96</td><td class="text-right">5</td></tr>
+                                <tr><td><strong>120</strong></td><td>2026-06-08</td><td>JOB-1004</td><td>Casting</td><td>OP-104</td><td class="text-right">5.96</td><td class="text-right">5</td></tr>
+                            </tbody>
+                        </table>
+                        <div class="pbi-insight warn">
+                            <h4>⚠️ Impact</h4>
+                            <p>Duplicate inflates OP-104's hours by 5.96h on 2026-06-08. Combined with other records, this pushes OP-104 to 11.92h — triggering the Q3 overtime violation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q3 & Q4 -->
+            <div class="pbi-row pbi-row-2">
+                <div class="pbi-card violation-card" data-severity="fail">
+                    <div class="pbi-card-header">Q3 — Overtime Violations (Rule R1) <span class="pbi-badge pbi-badge-fail" style="margin-left:8px"><span class="pbi-badge-dot"></span>2 Operators</span></div>
+                    <div class="pbi-card-body">
+                        <table class="pbi-table">
+                            <thead><tr><th>Operator</th><th>Date</th><th>Total Hours</th><th>Limit</th><th>Excess</th></tr></thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>OP-104</strong> Osei, K.</td><td>2026-06-08</td>
+                                    <td class="text-right"><strong>11.92h</strong></td><td class="text-right">8.00h</td>
+                                    <td class="text-right" style="color:var(--pbi-red);font-weight:600">+3.92h</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>OP-102</strong> Nguyen, T.</td><td>2026-07-06</td>
+                                    <td class="text-right"><strong>11.75h</strong></td><td class="text-right">8.00h</td>
+                                    <td class="text-right" style="color:var(--pbi-red);font-weight:600">+3.75h</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pbi-chart-wrap short" style="margin-top:12px">
+                            <canvas id="chart-overtime"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pbi-card violation-card" data-severity="fail">
+                    <div class="pbi-card-header">Q4 — Missing Scrap Reason (Rule R4) <span class="pbi-badge pbi-badge-fail" style="margin-left:8px"><span class="pbi-badge-dot"></span>14 Units</span></div>
+                    <div class="pbi-card-body">
+                        <table class="pbi-table">
+                            <thead><tr><th>Record</th><th>Date</th><th>Job</th><th>Stage</th><th>Scrapped</th><th>Reason</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>243</strong></td><td>2026-07-06</td><td>JOB-1009</td><td>Finishing</td><td class="text-right">7</td><td><span class="pbi-badge pbi-badge-fail">Missing</span></td></tr>
+                                <tr><td><strong>250</strong></td><td>2026-07-07</td><td>JOB-1012</td><td>Casting</td><td class="text-right">7</td><td><span class="pbi-badge pbi-badge-fail">Missing</span></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="pbi-insight danger">
+                            <h4>❌ Business Impact</h4>
+                            <p>14 units scrapped without documented reasons. This prevents root cause analysis and corrective action. 28.6% of all scrapped units (14 of 49) lack traceability.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q5 & Q6 -->
+            <div class="pbi-row pbi-row-2">
+                <div class="pbi-card violation-card" data-severity="fail">
+                    <div class="pbi-card-header">Q5 — Labour After Job Close (Rule R2) <span class="pbi-badge pbi-badge-fail" style="margin-left:8px"><span class="pbi-badge-dot"></span>2 Records</span></div>
+                    <div class="pbi-card-body">
+                        <table class="pbi-table">
+                            <thead><tr><th>Record</th><th>Labour Date</th><th>Job</th><th>Closed</th><th>Days After</th><th>Stage</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>263</strong></td><td>2026-07-13</td><td>JOB-1014</td><td>2026-07-10</td><td class="text-right" style="color:var(--pbi-red);font-weight:600">+3 days</td><td>Casting</td></tr>
+                                <tr><td><strong>266</strong></td><td>2026-07-14</td><td>JOB-1014</td><td>2026-07-10</td><td class="text-right" style="color:var(--pbi-red);font-weight:600">+4 days</td><td>Finishing</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="pbi-card violation-card" data-severity="fail">
+                    <div class="pbi-card-header">Q6 — Overproduction at Finishing (Rule R5) <span class="pbi-badge pbi-badge-fail" style="margin-left:8px"><span class="pbi-badge-dot"></span>1 Job</span></div>
+                    <div class="pbi-card-body">
+                        <table class="pbi-table">
+                            <thead><tr><th>Job</th><th>Product</th><th>Ordered</th><th>Finished</th><th>Overage</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>JOB-1011</strong></td><td>PRD-440</td><td class="text-right">16</td><td class="text-right"><strong>22</strong></td><td class="text-right" style="color:var(--pbi-red);font-weight:600">+6 units</td></tr>
+                            </tbody>
+                        </table>
+                        <div class="pbi-chart-wrap short" style="margin-top:12px">
+                            <canvas id="chart-overproduction"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ┌─────────────────────────────────────────────────────────────┐
+             │  PAGE 3: LABOUR COST ANALYSIS                               │
+             └─────────────────────────────────────────────────────────────┘ -->
+        <div class="pbi-page" id="page-labour">
+            <div class="pbi-kpi-grid" style="grid-template-columns: repeat(4, 1fr)">
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-blue)"></div>
+                    <div class="pbi-kpi-label">Mixing (WC-100)</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-blue); font-size:22px">$6,029</div>
+                    <div class="pbi-kpi-sub">129.66 hrs · $46.50/hr</div>
+                </div>
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-teal)"></div>
+                    <div class="pbi-kpi-label">Casting (WC-200)</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-teal); font-size:22px">$18,512</div>
+                    <div class="pbi-kpi-sub">433.04 hrs · $42.75/hr</div>
+                </div>
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-orange)"></div>
+                    <div class="pbi-kpi-label">Curing (WC-300)</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-orange); font-size:22px">$2,696</div>
+                    <div class="pbi-kpi-sub">96.29 hrs · $28.00/hr</div>
+                </div>
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-red)"></div>
+                    <div class="pbi-kpi-label">Finishing (WC-350)</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-red); font-size:22px">$0 ⚠️</div>
+                    <div class="pbi-kpi-sub">214.56 hrs · $0.00/hr</div>
+                </div>
+            </div>
+
+            <div class="pbi-row pbi-row-2">
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Labour Cost by Work Centre</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-chart-wrap tall">
+                            <canvas id="chart-labour-cost"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Hours Distribution by Work Centre</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-chart-wrap tall">
+                            <canvas id="chart-labour-hours-donut"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detail Table -->
+            <div class="pbi-card">
+                <div class="pbi-card-header">Work Centre Detail Matrix</div>
+                <div class="pbi-card-body">
+                    <table class="pbi-table">
+                        <thead>
+                            <tr><th>Work Centre</th><th>Name</th><th class="text-right">Records</th><th class="text-right">Total Hours</th><th class="text-right">Rate ($/hr)</th><th class="text-right">Labour Cost</th><th>Hours Distribution</th><th class="text-center">Status</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>WC-100</strong></td><td>Mixing</td><td class="text-right">28</td><td class="text-right">129.66</td><td class="text-right">$46.50</td><td class="text-right"><strong>$6,029.19</strong></td>
+                                <td><div class="pbi-data-bar"><div class="pbi-data-bar-fill" style="width:30%;background:var(--pbi-blue)"></div><div class="pbi-data-bar-label">14.8%</div></div></td>
+                                <td class="text-center"><span class="pbi-badge pbi-badge-pass"><span class="pbi-badge-dot"></span>OK</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>WC-200</strong></td><td>Casting</td><td class="text-right">77</td><td class="text-right">433.04</td><td class="text-right">$42.75</td><td class="text-right"><strong>$18,512.46</strong></td>
+                                <td><div class="pbi-data-bar"><div class="pbi-data-bar-fill" style="width:100%;background:var(--pbi-teal)"></div><div class="pbi-data-bar-label">49.6%</div></div></td>
+                                <td class="text-center"><span class="pbi-badge pbi-badge-pass"><span class="pbi-badge-dot"></span>OK</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>WC-300</strong></td><td>Curing</td><td class="text-right">23</td><td class="text-right">96.29</td><td class="text-right">$28.00</td><td class="text-right"><strong>$2,696.12</strong></td>
+                                <td><div class="pbi-data-bar"><div class="pbi-data-bar-fill" style="width:22%;background:var(--pbi-orange)"></div><div class="pbi-data-bar-label">11.0%</div></div></td>
+                                <td class="text-center"><span class="pbi-badge pbi-badge-pass"><span class="pbi-badge-dot"></span>OK</span></td>
+                            </tr>
+                            <tr style="background:#FFF8E1">
+                                <td><strong>WC-350</strong></td><td>Finishing</td><td class="text-right">41</td><td class="text-right">214.56</td><td class="text-right" style="color:var(--pbi-red);font-weight:700">$0.00</td><td class="text-right" style="color:var(--pbi-red);font-weight:700"><strong>$0.00</strong></td>
+                                <td><div class="pbi-data-bar"><div class="pbi-data-bar-fill" style="width:49%;background:var(--pbi-red)"></div><div class="pbi-data-bar-label">24.6%</div></div></td>
+                                <td class="text-center"><span class="pbi-badge pbi-badge-warn"><span class="pbi-badge-dot"></span>WARN</span></td>
+                            </tr>
+                            <tr class="total-row">
+                                <td colspan="2"><strong>TOTAL</strong></td><td class="text-right">169</td><td class="text-right"><strong>873.55</strong></td><td></td><td class="text-right"><strong>$27,237.77</strong></td><td></td><td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="pbi-insight warn" style="margin-top:var(--pbi-gap)">
+                <h4>⚠️ Concern: WC-350 (Finishing) — $0.00/hr Labour Rate</h4>
+                <p>214.56 hours of Finishing work contribute $0.00 to labour costs. The total of $27,237.77 is likely <strong>understated</strong>. Possible explanations: (1) Salaried staff not costed per hour, (2) Automated/curing process, or (3) Data entry error. If Finishing should carry a typical shop rate (~$35/hr), the true total could be closer to <strong>$34,747</strong>.</p>
+            </div>
+        </div>
+
+        <!-- ┌─────────────────────────────────────────────────────────────┐
+             │  PAGE 4: PRODUCT PROFITABILITY                              │
+             └─────────────────────────────────────────────────────────────┘ -->
+        <div class="pbi-page" id="page-products">
+            <div class="pbi-kpi-grid" style="grid-template-columns: repeat(4, 1fr)">
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-blue)"></div>
+                    <div class="pbi-kpi-label">Products</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-blue)">5</div>
+                    <div class="pbi-kpi-sub">In product catalog</div>
+                </div>
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: #107C10"></div>
+                    <div class="pbi-kpi-label">Profitable</div>
+                    <div class="pbi-kpi-value" style="color: #107C10">4</div>
+                    <div class="pbi-kpi-sub">Margin 32.5% – 34.8%</div>
+                </div>
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-red)"></div>
+                    <div class="pbi-kpi-label">Loss-Making</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-red)">1</div>
+                    <div class="pbi-kpi-sub">PRD-440: −$54/unit</div>
+                </div>
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-purple)"></div>
+                    <div class="pbi-kpi-label">Avg Margin</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-purple)">23.5%</div>
+                    <div class="pbi-kpi-sub">Weighted across products</div>
+                </div>
+            </div>
+
+            <div class="pbi-row pbi-row-2">
+                <!-- Cost vs. Sell -->
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Cost vs. Selling Price by Product</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-chart-wrap tall">
+                            <canvas id="chart-product-cost-sell"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Margin Waterfall -->
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Profit Margin by Product ($)</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-chart-wrap tall">
+                            <canvas id="chart-product-margin"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detail Table -->
+            <div class="pbi-card">
+                <div class="pbi-card-header">Product Profitability Matrix</div>
+                <div class="pbi-card-body">
+                    <table class="pbi-table">
+                        <thead>
+                            <tr><th>Product</th><th>Description</th><th class="text-right">Cost ($)</th><th class="text-right">Sell ($)</th><th class="text-right">Margin ($)</th><th class="text-right">Margin (%)</th><th>Margin Bar</th><th class="text-center">Status</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>PRD-110</strong></td><td>Wall Panel — 8ft</td><td class="text-right">$268.50</td><td class="text-right">$412.00</td>
+                                <td class="text-right" style="color:#107C10;font-weight:600">+$143.50</td><td class="text-right">34.8%</td>
+                                <td><div class="pbi-data-bar"><div class="pbi-data-bar-fill" style="width:83%;background:#107C10"></div><div class="pbi-data-bar-label">34.8%</div></div></td>
+                                <td class="text-center"><span class="pbi-badge pbi-badge-pass"><span class="pbi-badge-dot"></span>Profit</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>PRD-120</strong></td><td>Wall Panel — 10ft</td><td class="text-right">$331.75</td><td class="text-right">$505.00</td>
+                                <td class="text-right" style="color:#107C10;font-weight:600">+$173.25</td><td class="text-right">34.3%</td>
+                                <td><div class="pbi-data-bar"><div class="pbi-data-bar-fill" style="width:100%;background:#107C10"></div><div class="pbi-data-bar-label">34.3%</div></div></td>
+                                <td class="text-center"><span class="pbi-badge pbi-badge-pass"><span class="pbi-badge-dot"></span>Profit</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>PRD-310</strong></td><td>Manhole Barrel</td><td class="text-right">$214.60</td><td class="text-right">$318.00</td>
+                                <td class="text-right" style="color:#107C10;font-weight:600">+$103.40</td><td class="text-right">32.5%</td>
+                                <td><div class="pbi-data-bar"><div class="pbi-data-bar-fill" style="width:60%;background:#107C10"></div><div class="pbi-data-bar-label">32.5%</div></div></td>
+                                <td class="text-center"><span class="pbi-badge pbi-badge-pass"><span class="pbi-badge-dot"></span>Profit</span></td>
+                            </tr>
+                            <tr style="background:#FFF0F0">
+                                <td><strong>PRD-440</strong></td><td>Retaining Block</td><td class="text-right" style="color:var(--pbi-red)"><strong>$366.00</strong></td><td class="text-right"><strong>$312.00</strong></td>
+                                <td class="text-right" style="color:var(--pbi-red);font-weight:700">−$54.00</td><td class="text-right" style="color:var(--pbi-red);font-weight:700">−17.3%</td>
+                                <td><div class="pbi-data-bar"><div class="pbi-data-bar-fill" style="width:31%;background:var(--pbi-red)"></div><div class="pbi-data-bar-label">−17.3%</div></div></td>
+                                <td class="text-center"><span class="pbi-badge pbi-badge-fail"><span class="pbi-badge-dot"></span>LOSS</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>PRD-450</strong></td><td>Paving Slab</td><td class="text-right">$248.75</td><td class="text-right">$372.00</td>
+                                <td class="text-right" style="color:#107C10;font-weight:600">+$123.25</td><td class="text-right">33.1%</td>
+                                <td><div class="pbi-data-bar"><div class="pbi-data-bar-fill" style="width:71%;background:#107C10"></div><div class="pbi-data-bar-label">33.1%</div></div></td>
+                                <td class="text-center"><span class="pbi-badge pbi-badge-pass"><span class="pbi-badge-dot"></span>Profit</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="pbi-insight danger" style="margin-top:var(--pbi-gap)">
+                <h4>❌ Rule R8 Violation: PRD-440 (Retaining Block)</h4>
+                <p>Costs <strong>$366.00</strong> to produce but sells for only <strong>$312.00</strong> — a <strong>$54.00 loss per unit</strong>. With JOB-1011 alone producing 22 units, this represents a <strong>$1,188 direct loss</strong>. Possible data entry error (prices swapped?) or genuine pricing issue requiring urgent review.</p>
+            </div>
+        </div>
+
+        <!-- ┌─────────────────────────────────────────────────────────────┐
+             │  PAGE 5: JOB COMPARISON                                     │
+             └─────────────────────────────────────────────────────────────┘ -->
+        <div class="pbi-page" id="page-comparison">
+            <div class="pbi-kpi-grid" style="grid-template-columns: repeat(4, 1fr)">
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-blue)"></div>
+                    <div class="pbi-kpi-label">JOB-1006 Hours</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-blue)">63.19</div>
+                    <div class="pbi-kpi-sub">12 records · 18 days</div>
+                </div>
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-red)"></div>
+                    <div class="pbi-kpi-label">JOB-1010 Hours</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-red)">122.51</div>
+                    <div class="pbi-kpi-sub">20 records · 24 days</div>
+                </div>
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-orange)"></div>
+                    <div class="pbi-kpi-label">Difference</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-orange)">59.32h</div>
+                    <div class="pbi-kpi-sub">93.9% more labour</div>
+                </div>
+                <div class="pbi-kpi">
+                    <div class="pbi-kpi-bar" style="background: var(--pbi-purple)"></div>
+                    <div class="pbi-kpi-label">Key Factor</div>
+                    <div class="pbi-kpi-value" style="color: var(--pbi-purple); font-size:18px">OP-106</div>
+                    <div class="pbi-kpi-sub">Trainee on JOB-1010</div>
+                </div>
+            </div>
+
+            <div class="pbi-row pbi-row-2">
+                <!-- Hours by Stage -->
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Hours by Production Stage</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-chart-wrap tall">
+                            <canvas id="chart-job-stage"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Radar Compare -->
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Multi-Metric Comparison</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-chart-wrap tall">
+                            <canvas id="chart-job-radar"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side-by-side comparison -->
+            <div class="pbi-row pbi-row-2">
+                <div class="pbi-card" style="border-top:3px solid var(--pbi-blue)">
+                    <div class="pbi-card-header" style="color:var(--pbi-blue)">JOB-1006 — Baseline</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Product</span><span class="pbi-metric-value">PRD-110 (Wall Panel 8ft)</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Qty Ordered</span><span class="pbi-metric-value">24 units</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Total Hours</span><span class="pbi-metric-value" style="color:var(--pbi-blue)">63.19h</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Records</span><span class="pbi-metric-value">12</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Units Completed</span><span class="pbi-metric-value">95</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Units Scrapped</span><span class="pbi-metric-value">4</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Calendar Days</span><span class="pbi-metric-value">18</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Operators</span><span class="pbi-metric-value">5 (regular crew)</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Hrs/Unit</span><span class="pbi-metric-value">2.63 hrs/unit</span></div>
+                    </div>
+                </div>
+                <div class="pbi-card" style="border-top:3px solid var(--pbi-red)">
+                    <div class="pbi-card-header" style="color:var(--pbi-red)">JOB-1010 — Anomaly</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Product</span><span class="pbi-metric-value">PRD-110 (Wall Panel 8ft)</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Qty Ordered</span><span class="pbi-metric-value">24 units</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Total Hours</span><span class="pbi-metric-value" style="color:var(--pbi-red)">122.51h (+93.9%)</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Records</span><span class="pbi-metric-value">20</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Units Completed</span><span class="pbi-metric-value">114</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Units Scrapped</span><span class="pbi-metric-value" style="color:var(--pbi-red)">29 (625% more)</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Calendar Days</span><span class="pbi-metric-value">24</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Operators</span><span class="pbi-metric-value">5 (incl. OP-106 new)</span></div>
+                        <div class="pbi-metric-row"><span class="pbi-metric-label">Hrs/Unit</span><span class="pbi-metric-value" style="color:var(--pbi-red)">5.10 hrs/unit</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Insights -->
+            <div style="margin-top:var(--pbi-gap)">
+                <div class="pbi-card">
+                    <div class="pbi-card-header">Root Cause Analysis</div>
+                    <div class="pbi-card-body">
+                        <div class="pbi-insight danger">
+                            <h4>1. Operator Experience (Primary Factor)</h4>
+                            <p><strong>OP-106 (Singh, A.)</strong> only appears on JOB-1010, logging <strong>56.00 hours</strong> across 7 records — all exactly 8.00 hours/day at Casting. Likely a <strong>trainee</strong>. Casting stage shows a 58.61h gap between jobs — accounting for virtually all the 59.32h difference.</p>
+                        </div>
+                        <div class="pbi-insight warn" style="margin-top:8px">
+                            <h4>2. Higher Scrap / Rework</h4>
+                            <p>JOB-1010 scrapped <strong>29 units</strong> vs. only 4 for JOB-1006. More scrap means more rework — extra hours to produce replacement units.</p>
+                        </div>
+                        <div class="pbi-insight" style="margin-top:8px">
+                            <h4>3. Longer Duration / Scheduling</h4>
+                            <p>JOB-1010 spanned <strong>24 calendar days</strong> vs. 18. Could indicate production interruptions, equipment downtime, or lower-priority scheduling.</p>
+                        </div>
+                        <div class="pbi-insight success" style="margin-top:8px">
+                            <h4>📋 Recommended Next Steps</h4>
+                            <p>• Ask Production Manager if OP-106 was being trained<br>
+                            • Check for equipment issues/downtime during JOB-1010's dates<br>
+                            • Verify if OP-106's round 8.00h entries are actual or estimated<br>
+                            • Review material quality issues not captured in scrap reason field</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Watermark -->
+    <div class="pbi-watermark">
+        Power BI Report | Meridian Precast Ltd. — Production Data Quality Analysis | September 2026
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         JavaScript — Charts, Interactivity, Cross-Filtering
+         ══════════════════════════════════════════════════════════════ -->
+    <script>
+        // ─── Tab / Page Navigation ───
+        function showPage(pageId) {
+            document.querySelectorAll('.pbi-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.pbi-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.getElementById('tab-' + pageId).classList.add('active');
+            // Force chart redraw
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+        }
+
+        // ─── Slicer: Filter by Rule ───
+        function filterRule(rule, el) {
+            // Update chip states
+            document.querySelectorAll('#exec-slicer .pbi-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            
+            // Filter scorecard rows
+            const rows = document.querySelectorAll('#quality-scorecard tbody tr');
+            rows.forEach(row => {
+                if (rule === 'all') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = row.dataset.rule === rule ? '' : 'none';
+                }
+            });
+
+            // Highlight bar in violations chart
+            if (violationsChart) {
+                const ruleMap = { R1:0, R2:1, R3:2, R4:3, R5:4, R6:5, R8:6 };
+                const colors = ['#D64045','#E66C37','#D64045','#D64045','#E66C37','#D64045','#D64045'];
+                if (rule === 'all') {
+                    violationsChart.data.datasets[0].backgroundColor = colors;
+                } else {
+                    const idx = ruleMap[rule];
+                    violationsChart.data.datasets[0].backgroundColor = colors.map((c, i) => i === idx ? c : '#E1DFDD');
+                }
+                violationsChart.update();
+            }
+        }
+
+        // ─── Slicer: Filter by Severity ───
+        function filterSeverity(severity, el) {
+            document.querySelectorAll('.pbi-page#page-quality .pbi-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.violation-card').forEach(card => {
+                if (severity === 'all') {
+                    card.style.display = '';
+                } else {
+                    card.style.display = card.dataset.severity === severity ? '' : 'none';
+                }
+            });
+        }
+
+        // ─── Chart.js Global Config (Power BI Style) ───
+        Chart.defaults.color = '#605E5C';
+        Chart.defaults.borderColor = '#F3F2F1';
+        Chart.defaults.font.family = "'Segoe UI', 'Inter', sans-serif";
+        Chart.defaults.font.size = 11;
+        Chart.defaults.plugins.tooltip.backgroundColor = '#FFFFFF';
+        Chart.defaults.plugins.tooltip.titleColor = '#252423';
+        Chart.defaults.plugins.tooltip.bodyColor = '#605E5C';
+        Chart.defaults.plugins.tooltip.borderColor = '#E1DFDD';
+        Chart.defaults.plugins.tooltip.borderWidth = 1;
+        Chart.defaults.plugins.tooltip.cornerRadius = 4;
+        Chart.defaults.plugins.tooltip.padding = 10;
+        Chart.defaults.plugins.tooltip.titleFont = { weight: '600' };
+
+        const PBI_COLORS = ['#118DFF', '#12B5CB', '#E66C37', '#6B8E23', '#D64045', '#7030A0', '#F2C811', '#004C6D'];
+
+        // ═══════════════════════════════════════════════════════════
+        //  PAGE 1: EXECUTIVE SUMMARY CHARTS
+        // ═══════════════════════════════════════════════════════════
+
+        // Violations by Rule
+        const violationsChart = new Chart(document.getElementById('chart-violations-rule'), {
+            type: 'bar',
+            data: {
+                labels: ['R1\nOvertime', 'R2\nPost-Close', 'R3\nMissing Op', 'R4\nNo Scrap', 'R5\nOverprod.', 'R6\nDuplicates', 'R8\nUnderpriced'],
+                datasets: [{
+                    label: 'Violations Found',
+                    data: [2, 2, 2, 2, 1, 2, 1],
+                    backgroundColor: ['#D64045','#E66C37','#D64045','#D64045','#E66C37','#D64045','#D64045'],
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    barPercentage: 0.65,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1 }, title: { display: true, text: 'Count', color:'#8A8886' }, grid: { color:'#F3F2F1' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Operator Hours
+        new Chart(document.getElementById('chart-operator-hours'), {
+            type: 'bar',
+            data: {
+                labels: ['Ferreira, M.\n(OP-103)', 'Kowalski, D.\n(OP-101)', 'Osei, K.\n(OP-104)', 'Nguyen, T.\n(OP-102)', 'Beaulieu, R.\n(OP-105)', 'Singh, A.\n(OP-106)'],
+                datasets: [{
+                    label: 'Total Hours',
+                    data: [173.75, 163.74, 161.73, 161.39, 147.12, 56.00],
+                    backgroundColor: PBI_COLORS,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    barPercentage: 0.6,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, title: { display: true, text: 'Hours', color:'#8A8886' }, grid: { color:'#F3F2F1' } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Hours by Work Centre (donut)
+        new Chart(document.getElementById('chart-hours-wc'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Mixing (WC-100)', 'Casting (WC-200)', 'Curing (WC-300)', 'Finishing (WC-350)'],
+                datasets: [{
+                    data: [129.66, 433.04, 96.29, 214.56],
+                    backgroundColor: ['#118DFF', '#12B5CB', '#E66C37', '#D64045'],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2,
+                    hoverOffset: 6,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                cutout: '55%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle' } },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `${ctx.label}: ${ctx.parsed.toFixed(1)}h (${(ctx.parsed / 873.55 * 100).toFixed(1)}%)`
+                        }
+                    }
+                }
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        //  PAGE 2: DATA QUALITY CHARTS
+        // ═══════════════════════════════════════════════════════════
+
+        // Overtime Chart
+        new Chart(document.getElementById('chart-overtime'), {
+            type: 'bar',
+            data: {
+                labels: ['OP-104 (Jun 8)', 'OP-102 (Jul 6)'],
+                datasets: [
+                    { label: 'Allowed (8h)', data: [8, 8], backgroundColor: '#DEECF9', borderRadius: 4, barPercentage: 0.5 },
+                    { label: 'Excess', data: [3.92, 3.75], backgroundColor: '#D64045', borderRadius: 4, barPercentage: 0.5 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'rect', padding: 12 } } },
+                scales: {
+                    x: { stacked: true, grid: { display: false } },
+                    y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Hours' }, grid: { color: '#F3F2F1' } }
+                }
+            }
+        });
+
+        // Overproduction Chart
+        new Chart(document.getElementById('chart-overproduction'), {
+            type: 'bar',
+            data: {
+                labels: ['JOB-1011'],
+                datasets: [
+                    { label: 'Ordered', data: [16], backgroundColor: '#118DFF', borderRadius: 4, barPercentage: 0.4 },
+                    { label: 'Finished', data: [22], backgroundColor: '#D64045', borderRadius: 4, barPercentage: 0.4 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'rect', padding: 12 } } },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Units' }, grid: { color: '#F3F2F1' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        //  PAGE 3: LABOUR COST CHARTS
+        // ═══════════════════════════════════════════════════════════
+
+        new Chart(document.getElementById('chart-labour-cost'), {
+            type: 'bar',
+            data: {
+                labels: ['Mixing\n(WC-100)', 'Casting\n(WC-200)', 'Curing\n(WC-300)', 'Finishing\n(WC-350)'],
+                datasets: [{
+                    label: 'Labour Cost ($)',
+                    data: [6029.19, 18512.46, 2696.12, 0],
+                    backgroundColor: ['#118DFF', '#12B5CB', '#E66C37', '#D64045'],
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    barPercentage: 0.55,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: ctx => `$${ctx.parsed.y.toLocaleString()}` } }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { callback: v => '$' + v.toLocaleString() }, title: { display: true, text: 'Labour Cost ($)' }, grid: { color: '#F3F2F1' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('chart-labour-hours-donut'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Mixing (WC-100)', 'Casting (WC-200)', 'Curing (WC-300)', 'Finishing (WC-350)'],
+                datasets: [{
+                    data: [129.66, 433.04, 96.29, 214.56],
+                    backgroundColor: ['#118DFF', '#12B5CB', '#E66C37', '#D64045'],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                cutout: '55%',
+                plugins: {
+                    legend: { position: 'right', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle' } },
+                    tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed.toFixed(1)}h` } }
+                }
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        //  PAGE 4: PRODUCT PROFITABILITY CHARTS
+        // ═══════════════════════════════════════════════════════════
+
+        new Chart(document.getElementById('chart-product-cost-sell'), {
+            type: 'bar',
+            data: {
+                labels: ['PRD-110\nWall Panel 8ft', 'PRD-120\nWall Panel 10ft', 'PRD-310\nManhole Barrel', 'PRD-440\nRetaining Block', 'PRD-450\nPaving Slab'],
+                datasets: [
+                    { label: 'Cost ($)', data: [268.50, 331.75, 214.60, 366.00, 248.75], backgroundColor: '#D64045', borderRadius: 4, barPercentage: 0.5 },
+                    { label: 'Sell Price ($)', data: [412, 505, 318, 312, 372], backgroundColor: '#107C10', borderRadius: 4, barPercentage: 0.5 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'rect', padding: 16 } } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { callback: v => '$' + v }, grid: { color: '#F3F2F1' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('chart-product-margin'), {
+            type: 'bar',
+            data: {
+                labels: ['PRD-110', 'PRD-120', 'PRD-310', 'PRD-440', 'PRD-450'],
+                datasets: [{
+                    label: 'Margin ($)',
+                    data: [143.50, 173.25, 103.40, -54.00, 123.25],
+                    backgroundColor: ['#107C10', '#107C10', '#107C10', '#D64045', '#107C10'],
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    barPercentage: 0.55,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { ticks: { callback: v => '$' + v }, title: { display: true, text: 'Margin ($)' }, grid: { color: '#F3F2F1' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        //  PAGE 5: JOB COMPARISON CHARTS
+        // ═══════════════════════════════════════════════════════════
+
+        new Chart(document.getElementById('chart-job-stage'), {
+            type: 'bar',
+            data: {
+                labels: ['Mixing', 'Casting', 'Curing', 'Finishing'],
+                datasets: [
+                    { label: 'JOB-1006', data: [11.52, 27.79, 6.99, 16.89], backgroundColor: '#118DFF', borderRadius: 4, barPercentage: 0.5 },
+                    { label: 'JOB-1010', data: [11.64, 86.40, 7.09, 17.38], backgroundColor: '#D64045', borderRadius: 4, barPercentage: 0.5 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'rect', padding: 16 } } },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Hours' }, grid: { color: '#F3F2F1' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('chart-job-radar'), {
+            type: 'radar',
+            data: {
+                labels: ['Total Hours', 'Records', 'Units\nCompleted', 'Units\nScrapped', 'Calendar\nDays'],
+                datasets: [
+                    {
+                        label: 'JOB-1006',
+                        data: [63.19, 12, 95, 4, 18],
+                        borderColor: '#118DFF',
+                        backgroundColor: 'rgba(17,141,255,0.08)',
+                        pointBackgroundColor: '#118DFF',
+                        pointRadius: 4,
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'JOB-1010',
+                        data: [122.51, 20, 114, 29, 24],
+                        borderColor: '#D64045',
+                        backgroundColor: 'rgba(214,64,69,0.08)',
+                        pointBackgroundColor: '#D64045',
+                        pointRadius: 4,
+                        borderWidth: 2,
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', padding: 16 } } },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        grid: { color: '#E1DFDD' },
+                        angleLines: { color: '#E1DFDD' },
+                        pointLabels: { color: '#605E5C', font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // ─── Animate KPI values on page load ───
+        function animateKPI(el, end, prefix = '', suffix = '', decimals = 0, duration = 1000) {
+            const start = 0;
+            const startTime = performance.now();
+            const step = (now) => {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const val = start + (end - start) * eased;
+                el.textContent = prefix + (decimals > 0 ? val.toFixed(decimals) : Math.round(val).toLocaleString()) + suffix;
+                if (progress < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                animateKPI(document.querySelector('#kpi-records .pbi-kpi-value'), 169);
+                animateKPI(document.querySelector('#kpi-hours .pbi-kpi-value'), 873.6, '', '', 1);
+                animateKPI(document.querySelector('#kpi-cost .pbi-kpi-value'), 27238, '$');
+                animateKPI(document.querySelector('#kpi-violations .pbi-kpi-value'), 11);
+                animateKPI(document.querySelector('#kpi-scrap .pbi-kpi-value'), 6.2, '', '%', 1);
+            }, 200);
+        });
+    </script>
+</body>
+</html>

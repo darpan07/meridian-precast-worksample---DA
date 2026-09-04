@@ -1,0 +1,9 @@
+question,rule,check,finding,affected,severity,count
+Q1,R3,Missing Operator,2 records with no operator,"Rec 148, 175",FAIL,2
+Q2,R6,Duplicate Records,1 pair of identical records,"Rec 119, 120",FAIL,2
+Q3,R1,Overtime (>8 hrs/day),2 operators exceeded limit,"OP-104, OP-102",FAIL,2
+Q4,R4,Missing Scrap Reason,14 units without reason,"Rec 243, 250",FAIL,2
+Q5,R2,Labour After Job Close,2 records on JOB-1014,"Rec 263, 266",FAIL,2
+Q6,R5,Overproduction,JOB-1011 overproduced by 6,JOB-1011,FAIL,1
+Q7,R8,Product Sold Below Cost,PRD-440 loses $54/unit,PRD-440,FAIL,1
+Q8,R7,Labour Cost Calculation,WC-350 has $0/hr rate,WC-350 (41 records),WARN,1

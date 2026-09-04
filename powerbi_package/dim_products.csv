@@ -1,0 +1,6 @@
+product_code,description,cost_per_unit,sell_price_per_unit,margin_dollars,margin_pct,is_profitable
+PRD-110,Wall Panel — 8ft,268.5,412,143.5,34.8,True
+PRD-120,Wall Panel — 10ft,331.75,505,173.25,34.3,True
+PRD-310,Manhole Barrel,214.6,318,103.4,32.5,True
+PRD-440,Retaining Block,366.0,312,-54.0,-17.3,False
+PRD-450,Paving Slab,248.75,372,123.25,33.1,True
